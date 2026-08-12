@@ -28,6 +28,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - `CLAUDE.md` only contains `@AGENTS.md`; edit guidance here, not there.
 - Spec-driven features use the `spec` and `spec-impl` skills (locked in `skills-lock.json`). Start large features through the spec skill instead of coding directly.
+- **spec-verifier** subagent: read-only quality review of a spec before implementation. Invoke it with `@spec-verifier <spec-name>` (e.g. `@spec-verifier 01-feed-home`); opencode will generate a task prompt and call the `spec-verifier` subagent. The verifier checks structure, clarity, testable acceptance criteria, inter-section consistency, and the state field ("Approved"/"Aprobado" gate for `spec-impl`), returning an APPROVED/CHANGES_NEEDED verdict. It does NOT modify files nor verify the implementation — only the spec document quality.
 
 
 ## Reglas de código

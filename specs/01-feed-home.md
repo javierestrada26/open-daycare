@@ -41,17 +41,17 @@ No hay datos persistentes ni nueva estructura de dominio. El mock se define como
 
 ## Criterios de aceptación
 
-- [ ] `/` renderiza un sidebar fijo de 248px con logo "OpenDaycare · Sala Soles", botón naranja "Nueva publicación" y nav con Feed activo (fondo `#FBE3D8`), Niños, Avisos, Mi cuenta.
-- [ ] El bloque inferior del sidebar muestra "Caro Giménez · Maestra · Soles" con avatar "C" e ícono de logout visible, todo no funcional.
-- [ ] Bajo el header "Buenas, Caro" y "12 niños · martes 17 jun" aparece el compositor "Compartí un momento…" con avatar C e ícono de cámara.
-- [ ] Se muestran exactamente 3 posts en orden: logro de Mateo (orinal), actividad de Mateo (témperas con placeholder de foto), anuncio general (parque), con los textos literales de la plantilla.
-- [ ] Los badges LOGRO (verde `#CFEBD8`/`#3E9B6C`), ACTIVIDAD (celeste `#C7E7F1`/`#2E89A6`) y ANUNCIO (azul `#CCD8F4`/`#4E72C8`) se renderizan con los colores correctos.
-- [ ] Se muestran contadores de corazones (3, 5, 8) y comentarios (1, 2, 0) coincidentes con la plantilla; link "Editar" por post visible (no funcional).
-- [ ] El placeholder de foto del post de actividad muestra marco punteado, ícono de cámara y "Foto · pintando con témperas".
-- [ ] Las tipografías body=Nunito y display (nombres/títulos)=Fredoka se cargan vía `next/font/google` (sin FOUP) con texto `#3F362E` y fondo `#F6ECDF`.
-- [ ] `npm run lint` pasa sin errores y `npx tsc --noEmit` no reporta tipos.
-- [ ] Captura de `/` comparada contra `feed.dc.html` coincide en estructura, colores, tipografía y espaciados (revisión manual Playwright).
-- [ ] Ningún elemento navega a otra ruta real ni ejecuta acción de backend (links sin `href` funcional, sin `onClick` real).
+- [x] `/` renderiza un sidebar fijo de 248px con logo "OpenDaycare · Sala Soles", botón naranja "Nueva publicación" y nav con Feed activo (fondo `#FBE3D8`), Niños, Avisos, Mi cuenta.
+- [x] El bloque inferior del sidebar muestra "Caro Giménez · Maestra · Soles" con avatar "C" e ícono de logout visible, todo no funcional.
+- [x] Bajo el header "Buenas, Caro" y "12 niños · martes 17 jun" aparece el compositor "Compartí un momento…" con avatar C e ícono de cámara.
+- [x] Se muestran exactamente 3 posts en orden: logro de Mateo (original), actividad de Mateo (témperas con placeholder de foto), anuncio general (parque), con los textos literales de la plantilla.
+- [x] Los badges LOGRO (verde `#CFEBD8`/`#3E9B6C`), ACTIVIDAD (celeste `#C7E7F1`/`#2E89A6`) y ANUNCIO (azul `#CCD8F4`/`#4E72C8`) se renderizan con los colores correctos.
+- [x] Se muestran contadores de corazones (3, 5, 8) y comentarios (1, 2, 0) coincidentes con la plantilla; link "Editar" por post visible (no funcional).
+- [x] El placeholder de foto del post de actividad muestra marco punteado, ícono de cámara y "Foto · pintando con témperas".
+- [x] Las tipografías body=Nunito y display (nombres/títulos)=Fredoka se cargan vía `next/font/google` (sin FOUP) con texto `#3F362E` y fondo `#F6ECDF`.
+- [x] `npm run lint` pasa sin errores y `npx tsc --noEmit` no reporta tipos.
+- [x] Captura de `/` comparada contra `feed.dc.html` coincide en estructura, colores, tipografía y espaciados (revisión manual Playwright).
+- [x] Ningún elemento navega a otra ruta real ni ejecuta acción de backend (links sin `href` funcional, sin `onClick` real).
 
 ## Decisiones tomadas y descartadas
 
