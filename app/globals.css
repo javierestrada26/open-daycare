@@ -1,26 +1,71 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Cream / background tokens */
+  --color-app-bg: #F6ECDF;
+  --color-surface: #FFFDF9;
+  --color-surface-active: #FBE3D8;
+  --color-border-cream: #ECE0D0;
+  --color-divider: #F0E6D8;
+  --color-rule: #E7DAC8;
+  --color-scroll-thumb: #E4D6C4;
+
+  /* Text tokens */
+  --color-ink: #3F362E;
+  --color-ink-body: #4A4038;
+  --color-ink-soft: #6E6359;
+  --color-ink-muted: #94887B;
+  --color-ink-faint: #A89A8B;
+  --color-ink-placeholder: #B0A290;
+
+  /* Terracota / primary */
+  --color-primary: #D9583C;
+  --color-primary-accent: #E0654A;
+  --color-primary-dark: #C5503A;
+  --color-primary-gradient-from: #F4977E;
+  --color-primary-gradient-to: #EE8164;
+  --color-primary-soft: #F2937A;
+
+  /* Badges */
+  --color-badge-logro-bg: #CFEBD8;
+  --color-badge-logro: #3E9B6C;
+  --color-badge-actividad-bg: #C7E7F1;
+  --color-badge-actividad: #2E89A6;
+  --color-badge-anuncio-bg: #CCD8F4;
+  --color-badge-anuncio: #4E72C8;
+
+  /* Avatars */
+  --color-avatar-sky-bg: #A9D9E8;
+  --color-avatar-sky: #1F7A93;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Fonts — reference the runtime CSS variables set by next/font/google on <html> */
+  --font-display: var(--font-fredoka);
+  --font-body: var(--font-nunito);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background: var(--color-app-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-scroll-thumb);
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
 }
