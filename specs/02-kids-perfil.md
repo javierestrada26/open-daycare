@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 01
 **Date:** 2026-08-12
 
@@ -81,25 +81,25 @@ Conventions: slugs kebab-case desde el nombre; colores de avatar indexados por n
 
 ## Criterios de aceptación
 
-- [ ] `/kids` renderiza el sidebar de 248px con **Niños** activo (fondo `#FBE3D8`, color `--color-primary`, `font-extrabold`); Feed/Avisos/Mi cuenta inactivos.
-- [ ] El enlace "Niños" del sidebar apunta a `/kids` y "Feed" a `/`; los `href` navegan.
-- [ ] `/kids` muestra header "GESTIÓN / Niños" y botón naranja "Agregar niño" visible no funcional.
-- [ ] `/kids` muestra el input de búsqueda con placeholder "Buscar niño…" e ícono lupa, visible no funcional (no filtra).
-- [ ] `/kids` muestra el separador "SALA SOLES · 8 niños" con línea horizontal a la derecha.
-- [ ] `/kids` muestra exactamente 8 tarjetas en grilla de 2 columnas, con nombres, colores de avatar, edades y textos de padres idénticos a la plantilla.
-- [ ] Los badges MANÍ (Mateo), VINCULAR (Valentina) y LACTOSA (Tomás) se renderizan con los colores correctos; el resto muestra chevron neutro.
-- [ ] Hover en una tarjeta cambia el borde a `#F2A78E` y la eleva `translateY(-2px)` con transición suave.
-- [ ] Clic en cualquier `KidCard` navega a `/kids/<slug>` (ruta real) y renderiza el Perfil.
-- [ ] `/kids/<slug>` muestra el perfil mock de Mateo Fernández sin importar el slug: avatar 84px sky, nombre "Mateo Fernández" (Fredoka), "3 años · Sala Soles", botón "Editar" visible no funcional.
-- [ ] La caja de alergias muestra fondo `#FBDAD6`, ícono triángulo en `#F4A8A0`, título "Alergias y notas" en `#C5413A` y el texto "Alergia al maní. Evitar frutos secos. Lleva inhalador en la mochila." en `#B25249`.
-- [ ] La lista de datos muestra tres filas: "Fecha de nacimiento · 12 mar 2022", "Sala · Soles", "Ingreso · feb 2025" (última sin divisor).
-- [ ] La columna derecha muestra el botón "Resumen del día" (fondo `--color-ink`, blanco) visible no funcional y el bloque "PADRES VINCULADOS".
-- [ ] Lucía Fernández · Mamá · activa lleva badge "ACTIVA" (verde `#CFEBD8`/`#3E9B6C`); Diego Fernández · Papá · invitación enviada lleva badge "PENDIENTE" (amarillo `#F7E7A6`/`#9A7B1E`).
-- [ ] El enlace "Vincular otro padre" muestra avatar punteado + ícono "+" y texto en `--color-primary-dark`, visible no funcional.
-- [ ] El vínculo "Volver a Niños" navega a `/kids`.
-- [ ] `npm run lint` pasa sin errores y `npx tsc --noEmit` no reporta tipos.
-- [ ] Capturas de `/kids` y `/kids/mateo-fernandez` comparadas contra sus `.dc.html` coinciden en estructura, colores, tipografía y espaciados (revisión Playwright).
-- [ ] Ningún botón fuera de scope ejecuta acción de backend ni navega.
+- [x] `/kids` renderiza el sidebar de 248px con **Niños** activo (fondo `#FBE3D8`, color `--color-primary`, `font-extrabold`); Feed/Avisos/Mi cuenta inactivos.
+- [x] El enlace "Niños" del sidebar apunta a `/kids` y "Feed" a `/`; los `href` navegan.
+- [x] `/kids` muestra header "GESTIÓN / Niños" y botón naranja "Agregar niño" visible no funcional.
+- [x] `/kids` muestra el input de búsqueda con placeholder "Buscar niño…" e ícono lupa, visible no funcional (no filtra).
+- [x] `/kids` muestra el separador "SALA SOLES · 8 niños" con línea horizontal a la derecha.
+- [x] `/kids` muestra exactamente 8 tarjetas en grilla de 2 columnas, con nombres, colores de avatar, edades y textos de padres idénticos a la plantilla.
+- [x] Los badges MANÍ (Mateo), VINCULAR (Valentina) y LACTOSA (Tomás) se renderizan con los colores correctos; el resto muestra chevron neutro.
+- [x] Hover en una tarjeta cambia el borde a `#F2A78E` y la eleva `translateY(-2px)` con transición suave.
+- [x] Clic en cualquier `KidCard` navega a `/kids/<slug>` (ruta real) y renderiza el Perfil.
+- [x] `/kids/<slug>` muestra el perfil mock de Mateo Fernández sin importar el slug: avatar 84px sky, nombre "Mateo Fernández" (Fredoka), "3 años · Sala Soles", botón "Editar" visible no funcional.
+- [x] La caja de alergias muestra fondo `#FBDAD6`, ícono triángulo en `#F4A8A0`, título "Alergias y notas" en `#C5413A` y el texto "Alergia al maní. Evitar frutos secos. Lleva inhalador en la mochila." en `#B25249`.
+- [x] La lista de datos muestra tres filas: "Fecha de nacimiento · 12 mar 2022", "Sala · Soles", "Ingreso · feb 2025" (última sin divisor).
+- [x] La columna derecha muestra el botón "Resumen del día" (fondo `--color-ink`, blanco) visible no funcional y el bloque "PADRES VINCULADOS".
+- [x] Lucía Fernández · Mamá · activa lleva badge "ACTIVA" (verde `#CFEBD8`/`#3E9B6C`); Diego Fernández · Papá · invitación enviada lleva badge "PENDIENTE" (amarillo `#F7E7A6`/`#9A7B1E`).
+- [x] El enlace "Vincular otro padre" muestra avatar punteado + ícono "+" y texto en `--color-primary-dark`, visible no funcional.
+- [x] El vínculo "Volver a Niños" navega a `/kids`.
+- [x] `npm run lint` pasa sin errores y `npx tsc --noEmit` no reporta tipos.
+- [x] Capturas de `/kids` y `/kids/mateo-fernandez` comparadas contra sus `.dc.html` coinciden en estructura, colores, tipografía y espaciados (revisión Playwright).
+- [x] Ningún botón fuera de scope ejecuta acción de backend ni navega.
 
 ## Decisiones tomadas y descartadas
 
