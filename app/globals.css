@@ -37,6 +37,32 @@
   /* Avatars */
   --color-avatar-sky-bg: #A9D9E8;
   --color-avatar-sky: #1F7A93;
+  --color-avatar-pink-bg: #F4B8CC;
+  --color-avatar-pink: #C44A7A;
+  --color-avatar-green-bg: #B9DEC4;
+  --color-avatar-green: #3E8B62;
+  --color-avatar-yellow-bg: #F4DC8E;
+  --color-avatar-yellow: #9A7B1E;
+  --color-avatar-purple-bg: #C9B6E8;
+  --color-avatar-purple: #7B5FC0;
+
+  /* Kids badges (MANÍ + LACTOSA comparten paleta naranja) */
+  --color-badge-mani-bg: #FBD8CC;
+  --color-badge-mani: #D9684A;
+  --color-badge-vincular-bg: #F9D2DE;
+  --color-badge-vincular: #C56486;
+
+  /* Parent status badges */
+  --color-badge-activa-bg: #CFEBD8;
+  --color-badge-activa: #3E9B6C;
+  --color-badge-pendiente-bg: #F7E7A6;
+  --color-badge-pendiente: #9A7B1E;
+
+  /* Allergy box */
+  --color-alergias-bg: #FBDAD6;
+  --color-alergias-icon-bg: #F4A8A0;
+  --color-alergias-title: #C5413A;
+  --color-alergias-text: #B25249;
 }
 
 @theme inline {

@@ -1,15 +1,19 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
+
+type SidebarActive = "feed" | "ninos" | "avisos" | "cuenta";
 
 type NavItemProps = {
   label: string;
+  href: string;
   active?: boolean;
   icon: ReactNode;
 };
 
-function NavItem({ label, active, icon }: NavItemProps) {
+function NavItem({ label, href, active, icon }: NavItemProps) {
   return (
-    <a
-      tabIndex={0}
+    <Link
+      href={href}
       className={[
         "flex items-center gap-3 px-3 py-[11px] rounded-[12px] text-[14.5px]",
         active
@@ -19,11 +23,15 @@ function NavItem({ label, active, icon }: NavItemProps) {
     >
       {icon}
       {label}
-    </a>
+    </Link>
   );
 }
 
-export function Sidebar() {
+type SidebarProps = {
+  active?: SidebarActive;
+};
+
+export function Sidebar({ active = "feed" }: SidebarProps) {
   return (
     <aside className="w-[248px] shrink-0 bg-surface border-r border-border-cream flex flex-col sticky top-0 h-screen py-6 px-4">
       <a className="flex items-center gap-[11px] pt-1 pr-2 pb-[22px] pl-2">
@@ -73,7 +81,8 @@ export function Sidebar() {
 
       <nav className="flex flex-col gap-1 flex-1">
         <NavItem
-          active
+          href="/"
+          active={active === "feed"}
           label="Feed"
           icon={
             <svg
@@ -91,6 +100,8 @@ export function Sidebar() {
           }
         />
         <NavItem
+          href="/kids"
+          active={active === "ninos"}
           label="Niños"
           icon={
             <svg
@@ -110,6 +121,8 @@ export function Sidebar() {
           }
         />
         <NavItem
+          href="#"
+          active={active === "avisos"}
           label="Avisos"
           icon={
             <svg
@@ -127,6 +140,8 @@ export function Sidebar() {
           }
         />
         <NavItem
+          href="#"
+          active={active === "cuenta"}
           label="Mi cuenta"
           icon={
             <svg
