@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 02
 **Date:** 2026-08-13
 
@@ -80,28 +80,28 @@ La lista `KIDS` en `app/kids/page.tsx` no se toca — el mock permanece intacto.
 
 ## Criterios de aceptación
 
-- [ ] El botón "Agregar niño" de `/kids` (gradiente coral, ícono "+", label "Agregar niño") al pulsarlo abre un modal sobre la página en la misma URL (`/kids`); la URL no cambia.
-- [ ] El modal oscurece el fondo (overlay `--color-modal-overlay` `rgba(63,54,46,0.35)`) y centra una tarjeta de `max-width: 520px` con `border-radius: 24px`, sombra `0 20px 50px -24px rgba(63,54,46,0.35)`, fondo `--color-auth-bg` (`#FBF4EC`) y borde `--color-border-cream` (`#ECE0D0`), idéntica a la referencia.
-- [ ] El header del modal muestra "Cancelar" (izquierda, `--color-ink-muted`), "Agregar niño" (centro, Fredoka `text-[18px]`) y "Guardar" (derecha, `--color-primary`), con la distribución justify-between de `agregar-nino.dc.html`.
-- [ ] El cuerpo muestra los 5 campos en el orden de la referencia: NOMBRE COMPLETO, FECHA DE NACIMIENTO, SALA, ALERGIAS (ETIQUETAS), NOTAS MÉDICAS, con labels en mayúsculas y `letter-spacing` idénticos a la plantilla (`text-[12px] font-extrabold tracking-[0.7px] text-ink-muted`).
-- [ ] NOMBRE COMPLETO es un `<input>` con placeholder "Ej. Martina López" y recibe `autoFocus` al abrirse el modal.
-- [ ] FECHA DE NACIMIENTO es un `<input type="text">` con placeholder "dd/mm/aaaa" (sin datepicker nativo).
-- [ ] SALA es un `<select>` nativo estilizado con un chevron SVG a la derecha y exactamente 3 opciones: `Soles` (default seleccionado), `Lunas`, `Estrellas`. Se puede abrir y elegir.
-- [ ] ALERGIAS (ETIQUETAS) es un `<input>` simple de texto con placeholder "Ej. Maní, Lactosa" — no chips ni tags.
-- [ ] NOTAS MÉDICAS es un `<textarea>` de `min-height: 90px` y `resize: vertical` con placeholder "Indicaciones, medicación, contactos…".
-- [ ] Todos los inputs y el `<select>` son editables (estado controlado con `useState`); al escribir o elegir, los valores se actualizan.
-- [ ] Pulsar ESC cierra el modal y resetea el formulario a vacío (con `sala: "Soles"`).
-- [ ] Clic en el backdrop oscuro cierra el modal; clics dentro de la tarjeta NO cierran (`stopPropagation`).
-- [ ] Clic en "Cancelar" cierra el modal sin efectos sobre la lista `/kids`.
-- [ ] Clic en "Guardar" cierra el modal sin persistir nada y sin agregar el niño a la grilla — `KIDS` sigue mostrando los 8 niños originales.
-- [ ] Reabrir el modal tras cerrarlo muestra todos los campos vacíos (estado reset).
-- [ ] No hay validación client-side, atributos `required`, ni mensajes de error visibles (conforme a SPEC 03).
-- [ ] `/kids` sigue siendo Server Component; el modal es la única isla client (`<AddKidModal />` importado); el resto del JSX de `/kids` no se serializa al cliente.
-- [ ] `app/_components/AddKidModal.tsx` es el único componente nuevo; `app/kids/page.tsx` solo cambia el disparador "Agregar niño" (y añade el import); el resto de archivos de SPEC 01-03 no se modifican.
-- [ ] `app/globals.css` solo añade el token `--color-modal-overlay`; el resto de `@theme` queda intacto.
-- [ ] `npm run lint` pasa sin errores; `npx tsc --noEmit` no reporta tipos.
-- [ ] Captura del modal abierto comparada contra `agregar-nino.dc.html` coincide en estructura, colores, tipografía y espaciados (revisión Playwright en `.playwright-mcp/`).
-- [ ] `/`, `/kids/[slug]`, `/login` y `/activate-account` funcionan sin regresiones; no se navega a otra ruta al abrir/cerrar el modal.
+- [x] El botón "Agregar niño" de `/kids` (gradiente coral, ícono "+", label "Agregar niño") al pulsarlo abre un modal sobre la página en la misma URL (`/kids`); la URL no cambia.
+- [x] El modal oscurece el fondo (overlay `--color-modal-overlay` `rgba(63,54,46,0.35)`) y centra una tarjeta de `max-width: 520px` con `border-radius: 24px`, sombra `0 20px 50px -24px rgba(63,54,46,0.35)`, fondo `--color-auth-bg` (`#FBF4EC`) y borde `--color-border-cream` (`#ECE0D0`), idéntica a la referencia.
+- [x] El header del modal muestra "Cancelar" (izquierda, `--color-ink-muted`), "Agregar niño" (centro, Fredoka `text-[18px]`) y "Guardar" (derecha, `--color-primary`), con la distribución justify-between de `agregar-nino.dc.html`.
+- [x] El cuerpo muestra los 5 campos en el orden de la referencia: NOMBRE COMPLETO, FECHA DE NACIMIENTO, SALA, ALERGIAS (ETIQUETAS), NOTAS MÉDICAS, con labels en mayúsculas y `letter-spacing` idénticos a la plantilla (`text-[12px] font-extrabold tracking-[0.7px] text-ink-muted`).
+- [x] NOMBRE COMPLETO es un `<input>` con placeholder "Ej. Martina López" y recibe `autoFocus` al abrirse el modal.
+- [x] FECHA DE NACIMIENTO es un `<input type="text">` con placeholder "dd/mm/aaaa" (sin datepicker nativo).
+- [x] SALA es un `<select>` nativo estilizado con un chevron SVG a la derecha y exactamente 3 opciones: `Soles` (default seleccionado), `Lunas`, `Estrellas`. Se puede abrir y elegir.
+- [x] ALERGIAS (ETIQUETAS) es un `<input>` simple de texto con placeholder "Ej. Maní, Lactosa" — no chips ni tags.
+- [x] NOTAS MÉDICAS es un `<textarea>` de `min-height: 90px` y `resize: vertical` con placeholder "Indicaciones, medicación, contactos…".
+- [x] Todos los inputs y el `<select>` son editables (estado controlado con `useState`); al escribir o elegir, los valores se actualizan.
+- [x] Pulsar ESC cierra el modal y resetea el formulario a vacío (con `sala: "Soles"`).
+- [x] Clic en el backdrop oscuro cierra el modal; clics dentro de la tarjeta NO cierran (`stopPropagation`).
+- [x] Clic en "Cancelar" cierra el modal sin efectos sobre la lista `/kids`.
+- [x] Clic en "Guardar" cierra el modal sin persistir nada y sin agregar el niño a la grilla — `KIDS` sigue mostrando los 8 niños originales.
+- [x] Reabrir el modal tras cerrarlo muestra todos los campos vacíos (estado reset).
+- [x] No hay validación client-side, atributos `required`, ni mensajes de error visibles (conforme a SPEC 03).
+- [x] `/kids` sigue siendo Server Component; el modal es la única isla client (`<AddKidModal />` importado); el resto del JSX de `/kids` no se serializa al cliente.
+- [x] `app/_components/AddKidModal.tsx` es el único componente nuevo; `app/kids/page.tsx` solo cambia el disparador "Agregar niño" (y añade el import); el resto de archivos de SPEC 01-03 no se modifican.
+- [x] `app/globals.css` solo añade el token `--color-modal-overlay`; el resto de `@theme` queda intacto.
+- [x] `npm run lint` pasa sin errores; `npx tsc --noEmit` no reporta tipos.
+- [x] Captura del modal abierto comparada contra `agregar-nino.dc.html` coincide en estructura, colores, tipografía y espaciados (revisión Playwright en `.playwright-mcp/`).
+- [x] `/`, `/kids/[slug]`, `/login` y `/activate-account` funcionan sin regresiones; no se navega a otra ruta al abrir/cerrar el modal.
 
 ## Decisiones tomadas y descartadas
 
