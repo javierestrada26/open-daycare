@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 01
 **Date:** 2026-08-13
 
@@ -39,7 +39,7 @@ const [password, setPassword] = useState("");
 // app/activate-account/page.tsx — estado del formulario
 const [code, setCode] = useState("7K4P9");
 const [email, setEmail] = useState("lucia.fernandez@gmail.com");
-const [password, setPassword] = useState("");
+const [password, setPassword] = useState("contraseña");
 const [consent, setConsent] = useState(true);
 
 // mock de invitación (hardcodeado, idéntico a la plantilla)
@@ -48,30 +48,32 @@ const invitation = { child: "Mateo", room: "Soles", avatarLetter: "M" };
 
 ## Plan de implementación
 
-1. Extender `app/globals.css`: añadir al `@theme` los tokens de auth (`--color-auth-bg: #FBF4EC`, `--color-border-input: #EADFD0`, `--color-consent-bg: #FBF1D6`, `--color-consent-check: #5FB97E`, `--color-consent-text: #8A7234`, `--color-brand-panel-1: #F6A98E`, `--color-brand-panel-3: #EC7E62`) y estilos base (`input:focus{outline:none}`, `::placeholder{color:var(--color-ink-placeholder)}`) replicando el `<style>` de las plantillas. Verificar: `npm run lint` y `npx tsc --noEmit` sin errores.
+1. Extender `app/globals.css`: añadir al `@theme` los tokens de auth (`--color-auth-bg: #FBF4EC`, `--color-border-input: #EADFD0`, `--color-consent-bg: #FBF1D6`, `--color-consent-check: #5FB97E`, `--color-consent-text: #8A7234`, `--color-brand-panel-1: #F6A98E`, `--color-brand-panel-2: #F2937A`, `--color-brand-panel-3: #EC7E62`) y estilos base (`input:focus{outline:none}`, `::placeholder{color:var(--color-ink-placeholder)}`) replicando el `<style>` de las plantillas. Verificar: `npm run lint` y `npx tsc --noEmit` sin errores.
 2. Crear `app/_components/SunMark.tsx`: ícono de sol (SVG `<circle>` + `<path>`) con props opcionales de tamaño/`stroke`. Sin estado. Usado por login y activar. Verificar: `npx tsc --noEmit` ok.
-3. Crear `app/login/page.tsx` (`'use client'`): grid dos columnas `1.05fr 1fr` sobre fondo `--color-auth-bg`. Panel izquierdo: gradiente `linear-gradient(155deg,#F6A98E 0%,#F2937A 45%,#EC7E62 100%)`, círculos decorativos, `<SunMark/>` en caja redondeada, "OpenDayCare" (Fredoka), tagline "El día de cada niño, compartido con su familia.", pie "Guardería Sala Soles" (con el prefijo de hoja de la plantilla). Panel derecho: "Iniciar sesión" + "Ingresá para ver el día de hoy.", inputs EMAIL y CONTRASEÑA controlados, "¿Olvidaste tu contraseña?" (`<button type="button">` no funcional), botón "Iniciar sesión" (`<button type="button">` no funcional, gradiente `--color-primary-gradient-from/to`), texto "¿Te invitó la guardería?" con `<Link href="/activate-account">Activá tu cuenta</Link>`. **Sin** bloque "INGRESO COMO" ni Personal/Familia. Ver manual: `/login` renderiza, se puede escribir en los inputs, el botón no navega, "Activá tu cuenta" lleva a `/activate-account`.
+3. Crear `app/login/page.tsx` (`'use client'`): grid dos columnas `1.05fr 1fr` sobre fondo `--color-auth-bg`. Panel izquierdo: gradiente `linear-gradient(155deg, var(--color-brand-panel-1) 0%, var(--color-brand-panel-2) 45%, var(--color-brand-panel-3) 100%)`, círculos decorativos, `<SunMark/>` en caja redondeada, "OpenDayCare" (Fredoka), tagline "El día de cada niño, compartido con su familia.", pie "Guardería Sala Soles" (con el prefijo de hoja de la plantilla). Panel derecho: "Iniciar sesión" + "Ingresá para ver el día de hoy.", inputs EMAIL y CONTRASEÑA controlados, "¿Olvidaste tu contraseña?" (`<button type="button">` no funcional), botón "Iniciar sesión" (`<button type="button">` no funcional, gradiente `--color-primary-gradient-from/to`), texto "¿Te invitó la guardería?" con `<Link href="/activate-account">Activá tu cuenta</Link>`. **Sin** bloque "INGRESO COMO" ni Personal/Familia. Ver manual: `/login` renderiza, se puede escribir en los inputs, el botón no navega, "Activá tu cuenta" lleva a `/activate-account`.
 4. Crear `app/activate-account/page.tsx` (`'use client'`): tarjeta centrada `max-width:440px` sobre `--color-auth-bg`. `<SunMark/>` en caja gradiente `linear-gradient(155deg,#F8C3A8,#F2937A)`, h1 "Bienvenida a OpenDayCare", descripción. Tarjeta de invitación (avatar "M" sky + "Te invitaron a seguir a / Mateo · Sala Soles"). Inputs CÓDIGO DE INVITACIÓN (`value=code`, Fredoka, `letter-spacing:3px`), EMAIL (`value=email`), CREAR CONTRASEÑA (type=password). Checkbox consent (fondo `--color-consent-bg`, check `--color-consent-check`, texto `--color-consent-text`) togglable. Botón "Activar mi cuenta" (`<button type="button">` no funcional). Texto "¿Ya tenés cuenta?" con `<Link href="/login">Iniciar sesión</Link>`. Ver manual: `/activate-account` renderiza, inputs editables, checkbox toggla, el botón no navega, "Iniciar sesión" lleva a `/login`.
 5. Verificar: `npm run lint` sin errores; `npx tsc --noEmit` ok; `npm run dev` y comparación visual de `/login` y `/activate-account` contra `login.dc.html` y `activar-cuenta.dc.html` (capturas Playwright en `.playwright-mcp/`); confirmar que `/`, `/kids` y `/kids/[slug]` no sufren regresiones.
 
 ## Criterios de aceptación
 
-- [ ] `/login` renderiza layout dos columnas: panel izquierdo con gradiente coral y panel derecho con el formulario, **sin** el bloque "INGRESO COMO" ni los botones Personal/Familia.
-- [ ] El panel izquierdo muestra `<SunMark/>` en caja redondeada, "OpenDayCare" (Fredoka), tagline "El día de cada niño, compartido con su familia." y pie "Guardería Sala Soles" (con el prefijo de hoja de la plantilla).
-- [ ] El formulario de login muestra "Iniciar sesión", "Ingresá para ver el día de hoy.", input EMAIL (editable) y input CONTRASEÑA (placeholder `••••••••`, editable).
-- [ ] "¿Olvidaste tu contraseña?" se ve como link color `--color-primary-dark` y al clic no hace nada (no funcional).
-- [ ] El botón "Iniciar sesión" tiene el gradiente coral y al clic no navega ni envía (no funcional).
-- [ ] "¿Te invitó la guardería? Activá tu cuenta" contiene un `<Link>` a `/activate-account` y al clic navega.
-- [ ] `/activate-account` renderiza la tarjeta centrada: `<SunMark/>` en caja gradiente, "Bienvenida a OpenDayCare" y la descripción de la plantilla.
-- [ ] La tarjeta de contexto muestra avatar "M" (sky) y "Te invitaron a seguir a / Mateo · Sala Soles".
-- [ ] Los inputs CÓDIGO DE INVITACIÓN (`7K4P9`, Fredoka, `letter-spacing:3px`), EMAIL (`lucia.fernandez@gmail.com`) y CREAR CONTRASEÑA se renderizan con los valores del mock y son editables.
-- [ ] El checkbox de consentimiento "Autorizo a la guardería a tomar y compartir fotos de mi hijo dentro de la app." togla al clic (verde `--color-consent-check`).
-- [ ] El botón "Activar mi cuenta" tiene el gradiente coral y al clic no navega ni envía (no funcional).
-- [ ] "¿Ya tenés cuenta? Iniciar sesión" contiene un `<Link>` a `/login` y al clic navega.
-- [ ] Las tipografías body=Nunito y display (títulos/logo)=Fredoka cargan vía `next/font/google` existente (sin tocar `app/layout.tsx`).
-- [ ] `npm run lint` pasa sin errores y `npx tsc --noEmit` no reporta tipos.
-- [ ] Capturas de `/login` y `/activate-account` comparadas contra sus `.dc.html` coinciden en estructura, colores, tipografía y espaciados, con la única diferencia intencional del selector de rol eliminado en login.
-- [ ] Ningún elemento fuera de los dos cross-links ejecuta navegación o acción de backend; `/`, `/kids` y `/kids/[slug]` funcionan sin regresiones.
+- [x] `/login` renderiza layout dos columnas: panel izquierdo con gradiente coral y panel derecho con el formulario, **sin** el bloque "INGRESO COMO" ni los botones Personal/Familia.
+- [x] El panel izquierdo muestra `<SunMark/>` en caja redondeada, "OpenDayCare" (Fredoka), tagline "El día de cada niño, compartido con su familia." y pie "Guardería Sala Soles" (con el prefijo de hoja de la plantilla).
+- [x] El formulario de login muestra "Iniciar sesión", "Ingresá para ver el día de hoy.", input EMAIL (editable) y input CONTRASEÑA (placeholder `••••••••`, editable).
+- [x] "¿Olvidaste tu contraseña?" se ve como link color `--color-primary-dark` y al clic no hace nada (no funcional).
+- [x] El botón "Iniciar sesión" tiene el gradiente coral y al clic no navega ni envía (no funcional).
+- [x] "¿Te invitó la guardería? Activá tu cuenta" contiene un `<Link>` a `/activate-account` y al clic navega.
+- [x] `/activate-account` renderiza la tarjeta centrada: `<SunMark/>` en caja gradiente, "Bienvenida a OpenDayCare" y la descripción "Te invitaron a seguir el día de tu hijo. Creá tu contraseña para activar la cuenta."
+- [x] La tarjeta de contexto muestra avatar "M" (sky) y "Te invitaron a seguir a / Mateo · Sala Soles".
+- [x] Los inputs CÓDIGO DE INVITACIÓN (`7K4P9`, Fredoka, `letter-spacing:3px`), EMAIL (`lucia.fernandez@gmail.com`) y CREAR CONTRASEÑA se renderizan con los valores del mock y son editables.
+- [x] El checkbox de consentimiento "Autorizo a la guardería a tomar y compartir fotos de mi hijo dentro de la app." togla al clic (verde `--color-consent-check`).
+- [x] El botón "Activar mi cuenta" tiene el gradiente coral y al clic no navega ni envía (no funcional).
+- [x] "¿Ya tenés cuenta? Iniciar sesión" contiene un `<Link>` a `/login` y al clic navega.
+- [x] Las tipografías body=Nunito y display (títulos/logo)=Fredoka cargan vía `next/font/google` existente (sin tocar `app/layout.tsx`).
+- [x] `npm run lint` pasa sin errores y `npx tsc --noEmit` no reporta tipos.
+- [x] Capturas de `/login` y `/activate-account` comparadas contra sus `.dc.html` coinciden en estructura, colores, tipografía y espaciados, con la única diferencia intencional del selector de rol eliminado en login.
+- [x] Ningún elemento fuera de los dos cross-links ejecuta navegación o acción de backend; `/`, `/kids` y `/kids/[slug]` funcionan sin regresiones.
+- [x] `SunMark.tsx` es el único componente del ícono de sol y lo reutilizan `/login` y `/activate-account` (sin duplicar el SVG en las páginas).
+- [x] `Sidebar.tsx` permanece intacto (sin tocar SPEC 01-02).
 
 ## Decisiones tomadas y descartadas
 
