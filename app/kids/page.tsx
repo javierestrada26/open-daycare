@@ -1,5 +1,6 @@
 import { Sidebar } from "../_components/Sidebar";
 import { KidCard } from "../_components/KidCard";
+import { AddKidModal } from "../_components/AddKidModal";
 
 type KidBadge = { label: "MANÍ" | "LACTOSA" | "VINCULAR" };
 
@@ -90,24 +91,7 @@ export default function KidsPage() {
                 Niños
               </h1>
             </div>
-            <a
-              tabIndex={0}
-              className="flex items-center gap-2 px-[18px] py-[11px] rounded-[14px] text-white font-extrabold text-[14.5px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] shadow-[0_8px_18px_-8px_rgba(238,129,100,0.7)]"
-            >
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#fff"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              Agregar niño
-            </a>
+            <AddKidModal />
           </div>
 
           <div className="flex items-center gap-[11px] bg-surface border border-border-cream rounded-[14px] px-4 py-3 mb-[22px]">
