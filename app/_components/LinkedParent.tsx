@@ -21,7 +21,7 @@ const STATUS_BADGE: Record<ParentStatus, string> = {
 };
 
 export function LinkedParent(props: LinkedParentProps) {
-  if ("addNew" in props && props.addNew) {
+  if ("addNew" in props) {
     return (
       <a className="flex items-center gap-3 pt-2">
         <span className="w-10 h-10 rounded-full border-[1.5px] border-dashed border-[#D8CBBA] flex items-center justify-center shrink-0 text-ink-placeholder">

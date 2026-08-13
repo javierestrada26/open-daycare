@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Sidebar } from "../../../_components/Sidebar";
-import { AllergyBox } from "../../../_components/AllergyBox";
-import { InfoRow } from "../../../_components/InfoRow";
-import { LinkedParent } from "../../../_components/LinkedParent";
+import { Sidebar } from "../../_components/Sidebar";
+import { AllergyBox } from "../../_components/AllergyBox";
+import { InfoRow } from "../../_components/InfoRow";
+import { LinkedParent } from "../../_components/LinkedParent";
 
 type ParentStatus = "activa" | "pendiente";
 
