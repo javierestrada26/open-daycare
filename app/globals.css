@@ -72,6 +72,9 @@
   --color-consent-text: #8A7234;
   --color-brand-panel-1: #F6A98E;
   --color-brand-panel-3: #EC7E62;
+
+  /* Modal overlay */
+  --color-modal-overlay: rgba(63, 54, 46, 0.35);
 }
 
 @theme inline {
