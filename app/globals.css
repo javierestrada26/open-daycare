@@ -63,6 +63,15 @@
   --color-alergias-icon-bg: #F4A8A0;
   --color-alergias-title: #C5413A;
   --color-alergias-text: #B25249;
+
+  /* Auth screens (login / activate-account) */
+  --color-auth-bg: #FBF4EC;
+  --color-border-input: #EADFD0;
+  --color-consent-bg: #FBF1D6;
+  --color-consent-check: #5FB97E;
+  --color-consent-text: #8A7234;
+  --color-brand-panel-1: #F6A98E;
+  --color-brand-panel-3: #EC7E62;
 }
 
 @theme inline {
@@ -82,6 +91,14 @@
   a {
     text-decoration: none;
     color: inherit;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  ::placeholder {
+    color: var(--color-ink-placeholder);
   }
 
   ::-webkit-scrollbar {
