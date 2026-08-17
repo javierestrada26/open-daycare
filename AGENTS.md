@@ -23,12 +23,21 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - **Playwright**: screenshots and any Playwright artifacts go in `.playwright-mcp/` (do not commit).
 - **Context7**: use it to fetch current docs for Next.js / React / Tailwind before writing framework code — this Next.js version postdates training data.
+- **Supabase**: use for any Supabase task — Database, Auth, Edge Functions, Realtime, Storage, migrations, RLS, logs, advisors, schema changes, and project config. Prefer `list_tables` before schema changes, `get_advisors` after DDL, and local development via the Supabase CLI before pushing to remote. Apply migrations with `apply_migration` (DDL) and run ad-hoc reads with `execute_sql`.
+
+## Skills
+
+Locked in `skills-lock.json`. Load the relevant skill before working in its domain.
+
+- **spec** / **spec-impl**: spec-driven feature design and implementation. Start large features through the `spec` skill instead of coding directly; implement approved specs with `spec-impl`.
+- **spec-verifier** subagent: read-only quality review of a spec before implementation. Invoke it with `@spec-verifier <spec-name>` (e.g. `@spec-verifier 01-feed-home`); opencode will generate a task prompt and call the `spec-verifier` subagent. The verifier checks structure, clarity, testable acceptance criteria, inter-section consistency, and the state field ("Approved"/"Aprobado" gate for `spec-impl`), returning an APPROVED/CHANGES_NEEDED verdict. It does NOT modify files nor verify the implementation — only the spec document quality.
+- **supabase**: load for ANY task involving Supabase — products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues), SSR integrations (`supabase-js`, `@supabase/ssr`), auth/sessions/RLS, schema changes, migrations, and debugging errors or logs.
+- **supabase-postgres-best-practices**: load BEFORE creating or altering tables/columns, schema design, migrations, RLS policies and tests, indexes, triggers, DB functions, queues (`pg_cron`/`pgmq`), vector search (`pgvector`), or diagnosing slow queries, timeouts, locking, bloat, and connection issues.
 
 ## Workflow
 
 - `CLAUDE.md` only contains `@AGENTS.md`; edit guidance here, not there.
-- Spec-driven features use the `spec` and `spec-impl` skills (locked in `skills-lock.json`). Start large features through the spec skill instead of coding directly.
-- **spec-verifier** subagent: read-only quality review of a spec before implementation. Invoke it with `@spec-verifier <spec-name>` (e.g. `@spec-verifier 01-feed-home`); opencode will generate a task prompt and call the `spec-verifier` subagent. The verifier checks structure, clarity, testable acceptance criteria, inter-section consistency, and the state field ("Approved"/"Aprobado" gate for `spec-impl`), returning an APPROVED/CHANGES_NEEDED verdict. It does NOT modify files nor verify the implementation — only the spec document quality.
+- Before any Supabase schema work: `list_tables` to understand existing structure, load the `supabase-postgres-best-practices` skill, and after DDL run `get_advisors` to catch missing RLS/indexes.
 
 
 ## Reglas de código
