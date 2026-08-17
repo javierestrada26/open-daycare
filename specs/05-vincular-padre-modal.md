@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 02
 **Date:** 2026-08-17
 
@@ -86,28 +86,28 @@ Props del componente: `{ kidName: string }` (ej. "Mateo Fernández"). La lista `
 
 ## Criterios de aceptación
 
-- [ ] Clic en "Vincular otro padre" de `/kids/[slug]` abre un modal sobre la página en la misma URL; la URL no cambia.
-- [ ] El disparador mantiene el aspecto del `addNew` original: avatar `w-10 h-10 rounded-full` con borde punteado `#D8CBBA` e ícono "+", label "Vincular otro padre" en `--color-primary-dark font-extrabold text-[14.5px]`.
-- [ ] El modal oscurece el fondo (overlay `--color-modal-overlay`) y centra una tarjeta `max-width:480px` con `border-radius:24px`, sombra `0 20px 50px -24px rgba(63,54,46,0.35)`, fondo `--color-auth-bg` y borde `--color-border-cream`, idéntica a la referencia.
-- [ ] El header muestra a la izq. "Vincular padre" (Fredoka `text-[18px]`) + "a Mateo Fernández" (`text-[13px] text-ink-faint`); a la der. botón × (caja `34×34 rounded-[10px] bg-divider`, ícono `text-ink-muted`) que cierra el modal.
-- [ ] El banner info muestra fondo `--color-info-banner-bg` (`#E3ECFB`), ícono en `--color-badge-anuncio` (`#4E72C8`) y texto "Le enviaremos un correo con un código para que active su cuenta. Solo verá el feed de Mateo." en `--color-info-banner-text` (`#3F5694`).
-- [ ] NOMBRE DEL PADRE/MADRE es un `<input>` con placeholder "Ej. Diego Fernández" y recibe `autoFocus` al abrirse.
-- [ ] EMAIL es un `<input type="email">` con placeholder "correo@ejemplo.com".
-- [ ] PARENTESCO muestra tres pills `rounded-full`: Mamá (activa por default: fondo `#CCD8F4`, borde `#9FB8EC`, texto `#4E72C8`), Papá y Tutor/a (inactivas: fondo `--color-surface`, borde `--color-border-cream`, texto `--color-ink-soft`). Single-select: clic en una la activa y desactiva las demás.
-- [ ] La caja CÓDIGO DE INVITACIÓN muestra fondo `--color-consent-bg` (`#FBF1D6`), borde `1.5px dashed #E6D08A`, label "CÓDIGO DE INVITACIÓN" en `--color-consent-label` (`#A88526`), código "7K4P9" (Fredoka `text-[34px] tracking-[7px]` en `--color-consent-text`) y "Vence en 7 días" en `--color-consent-label`. Estático, no editable.
-- [ ] El botón "Enviar invitación" tiene el gradiente coral, ícono paper-plane blanco, sombra `0 10px 22px -8px rgba(238,129,100,.7)` y al clic cierra el modal sin persistir ni agregar el padre a PADRES VINCULADOS.
-- [ ] Pulsar ESC cierra el modal y resetea el formulario a `{name:"", email:"", relation:"Mamá"}`.
-- [ ] Clic en el backdrop cierra el modal; clics dentro de la tarjeta NO cierran (`stopPropagation`).
-- [ ] Clic en el botón × cierra el modal sin efectos sobre la lista PADRES VINCULADOS.
-- [ ] Reabrir el modal tras cerrarlo muestra los campos vacíos y Mamá como pill activa (estado reset).
-- [ ] No hay validación client-side, atributos `required`, ni mensajes de error.
-- [ ] `/kids/[slug]` sigue siendo Server Component (async); `LinkParentModal` es la única isla client importada; el resto del JSX de la página no se serializa al cliente.
-- [ ] `app/_components/LinkedParent.tsx` ya no contiene la variante `addNew` ni el tipo `AddNewData` — vuelve a ser presentacional para padres existentes.
-- [ ] `app/_components/LinkParentModal.tsx` es el único componente nuevo; `app/kids/[slug]/page.tsx` solo cambia el disparador (y añade el import); `LinkedParent.tsx` solo pierde la rama `addNew`.
-- [ ] `app/globals.css` solo añade los 5 tokens del banner info + pill border + consent label/border; el resto de `@theme` queda intacto.
-- [ ] `npm run lint` pasa sin errores; `npx tsc --noEmit` no reporta tipos.
-- [ ] Captura del modal abierto comparada contra `vincular-padre.dc.html` coincide en estructura, colores, tipografía y espaciados (revisión Playwright en `.playwright-mcp/`).
-- [ ] `/`, `/kids`, `/kids/[slug]` (modal cerrado), `/login` y `/activate-account` funcionan sin regresiones; no se navega a otra ruta al abrir/cerrar el modal.
+- [x] Clic en "Vincular otro padre" de `/kids/[slug]` abre un modal sobre la página en la misma URL; la URL no cambia.
+- [x] El disparador mantiene el aspecto del `addNew` original: avatar `w-10 h-10 rounded-full` con borde punteado `#D8CBBA` e ícono "+", label "Vincular otro padre" en `--color-primary-dark font-extrabold text-[14.5px]`.
+- [x] El modal oscurece el fondo (overlay `--color-modal-overlay`) y centra una tarjeta `max-width:480px` con `border-radius:24px`, sombra `0 20px 50px -24px rgba(63,54,46,0.35)`, fondo `--color-auth-bg` y borde `--color-border-cream`, idéntica a la referencia.
+- [x] El header muestra a la izq. "Vincular padre" (Fredoka `text-[18px]`) + "a Mateo Fernández" (`text-[13px] text-ink-faint`); a la der. botón × (caja `34×34 rounded-[10px] bg-divider`, ícono `text-ink-muted`) que cierra el modal.
+- [x] El banner info muestra fondo `--color-info-banner-bg` (`#E3ECFB`), ícono en `--color-badge-anuncio` (`#4E72C8`) y texto "Le enviaremos un correo con un código para que active su cuenta. Solo verá el feed de Mateo." en `--color-info-banner-text` (`#3F5694`).
+- [x] NOMBRE DEL PADRE/MADRE es un `<input>` con placeholder "Ej. Diego Fernández" y recibe `autoFocus` al abrirse.
+- [x] EMAIL es un `<input type="email">` con placeholder "correo@ejemplo.com".
+- [x] PARENTESCO muestra tres pills `rounded-full`: Mamá (activa por default: fondo `#CCD8F4`, borde `#9FB8EC`, texto `#4E72C8`), Papá y Tutor/a (inactivas: fondo `--color-surface`, borde `--color-border-cream`, texto `--color-ink-soft`). Single-select: clic en una la activa y desactiva las demás.
+- [x] La caja CÓDIGO DE INVITACIÓN muestra fondo `--color-consent-bg` (`#FBF1D6`), borde `1.5px dashed #E6D08A`, label "CÓDIGO DE INVITACIÓN" en `--color-consent-label` (`#A88526`), código "7K4P9" (Fredoka `text-[34px] tracking-[7px]` en `--color-consent-text`) y "Vence en 7 días" en `--color-consent-label`. Estático, no editable.
+- [x] El botón "Enviar invitación" tiene el gradiente coral, ícono paper-plane blanco, sombra `0 10px 22px -8px rgba(238,129,100,.7)` y al clic cierra el modal sin persistir ni agregar el padre a PADRES VINCULADOS.
+- [x] Pulsar ESC cierra el modal y resetea el formulario a `{name:"", email:"", relation:"Mamá"}`.
+- [x] Clic en el backdrop cierra el modal; clics dentro de la tarjeta NO cierran (`stopPropagation`).
+- [x] Clic en el botón × cierra el modal sin efectos sobre la lista PADRES VINCULADOS.
+- [x] Reabrir el modal tras cerrarlo muestra los campos vacíos y Mamá como pill activa (estado reset).
+- [x] No hay validación client-side, atributos `required`, ni mensajes de error.
+- [x] `/kids/[slug]` sigue siendo Server Component (async); `LinkParentModal` es la única isla client importada; el resto del JSX de la página no se serializa al cliente.
+- [x] `app/_components/LinkedParent.tsx` ya no contiene la variante `addNew` ni el tipo `AddNewData` — vuelve a ser presentacional para padres existentes.
+- [x] `app/_components/LinkParentModal.tsx` es el único componente nuevo; `app/kids/[slug]/page.tsx` solo cambia el disparador (y añade el import); `LinkedParent.tsx` solo pierde la rama `addNew`.
+- [x] `app/globals.css` solo añade los 5 tokens del banner info + pill border + consent label/border; el resto de `@theme` queda intacto.
+- [x] `npm run lint` pasa sin errores; `npx tsc --noEmit` no reporta tipos.
+- [x] Captura del modal abierto comparada contra `vincular-padre.dc.html` coincide en estructura, colores, tipografía y espaciados (revisión Playwright en `.playwright-mcp/`).
+- [x] `/`, `/kids`, `/kids/[slug]` (modal cerrado), `/login` y `/activate-account` funcionan sin regresiones; no se navega a otra ruta al abrir/cerrar el modal.
 
 ## Decisiones tomadas y descartadas
 
