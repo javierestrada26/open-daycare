@@ -23,7 +23,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - **Playwright**: screenshots and any Playwright artifacts go in `.playwright-mcp/` (do not commit).
 - **Context7**: use it to fetch current docs for Next.js / React / Tailwind before writing framework code — this Next.js version postdates training data.
-- **Supabase**: use for any Supabase task — Database, Auth, Edge Functions, Realtime, Storage, migrations, RLS, logs, advisors, schema changes, and project config. Prefer `list_tables` before schema changes, `get_advisors` after DDL, and local development via the Supabase CLI before pushing to remote. Apply migrations with `apply_migration` (DDL) and run ad-hoc reads with `execute_sql`.
+- **Supabase**: use for any Supabase task — Database, Auth, Edge Functions, Realtime, Storage, migrations, RLS, logs, advisors, schema changes, and project config. Prefer `list_tables` before schema changes, `get_advisors` after DDL, and local development via the Supabase CLI before pushing to remote. Run ad-hoc reads with `execute_sql`; for DDL see the "Reglas de base de datos" section below (migrations are mandatory).
 
 ## Skills
 
@@ -38,6 +38,16 @@ Locked in `skills-lock.json`. Load the relevant skill before working in its doma
 
 - `CLAUDE.md` only contains `@AGENTS.md`; edit guidance here, not there.
 - Before any Supabase schema work: `list_tables` to understand existing structure, load the `supabase-postgres-best-practices` skill, and after DDL run `get_advisors` to catch missing RLS/indexes.
+
+
+## Reglas de base de datos
+
+- **Todo cambio a la base de datos va en una migración versionada.** NUNCA modifique el schema, datos semilla, RLS, índices, triggers, funciones DB, extensiones ni nada en la base de datos con comandos ad-hoc o llamadas sueltas al MCP `apply_migration`/`execute_sql` (DDL). Cree siempre un archivo en `supabase/migrations/<timestamp>_<nombre>.sql` y aplíquelo con `npx supabase db push`.
+- Las migraciones son la **única fuente de verdad** del schema: quedan versionadas en el repo, son repetibles y dan paridad local/remoto. Un cambio aplicado solo en el remoto sin migración es deuda técnica invisible.
+- Flujo canónico: `npx supabase migration new <nombre>` → escriba el SQL → `npx supabase db push` → verifique con `supabase list_tables` (MCP, verbose) y `supabase get_advisors` (security + performance).
+- `execute_sql` (MCP) es **solo lectura** para verificar (ej. `select`, `information_schema`, `pg_class`, `pg_policies`). No use `execute_sql` para `create`/`alter`/`drop`/`insert`/`update`/`delete` de schema o seed — eso va en una migración.
+- `apply_migration` (MCP) es un **fallback de contingencia** únicamente cuando la Supabase CLI no se pueda autenticar/enlazar (sin PAT). Si se usa, registre la decisión en el spec y luego reconcilie el historial remoto con `npx supabase db push` o `migration repair` para evitar drift.
+- Antes de tocar schema: cargue la skill `supabase-postgres-best-practices`. Cualquier desviación de sus reglas (ej. PK `uuid` vs `bigint identity`) debe documentarse explícitamente en el spec bajo "Decisiones tomadas y descartadas".
 
 
 ## Reglas de código
