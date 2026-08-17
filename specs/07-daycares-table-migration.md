@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** —
 **Date:** 2026-08-17
 
@@ -59,16 +59,16 @@ Convención (del doc de referencia): PK `id` `uuid` default `gen_random_uuid()`,
 
 ## Criterios de aceptación
 
-- [ ] Existe `supabase/config.toml` y `supabase/migrations/` en el repo (generados por `supabase init`).
-- [ ] `npx supabase migration list` no lista las migraciones de prueba `create_test_table`/`drop_test_table` (fueron reparadas).
-- [ ] Existe `supabase/migrations/<timestamp>_create_daycares_table.sql` con el SQL de creación + RLS + seed.
-- [ ] `supabase list_tables` muestra `public.daycares` con columnas `id uuid`, `name text`, `created_at timestamptz`.
-- [ ] `name` es `NOT NULL` (verificable en `information_schema.columns`).
-- [ ] RLS está habilitado en `daycares` (`select relrowsecurity, relforcerowsecurity from pg_class where relname='daycares'` → ambos `true`).
-- [ ] No existen policies en `daycares` (`select * from pg_policies where tablename='daycares'` → 0 filas).
-- [ ] `select id, name from daycares` devuelve exactamente 1 fila: name "Guardería Sala Soles" e id `a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d`.
-- [ ] `supabase get_advisors` (security) no reporta `daycares` como tabla sin RLS.
-- [ ] Ningún archivo dentro de `app/` fue modificado.
+- [x] Existe `supabase/config.toml` y `supabase/migrations/` en el repo (generados por `supabase init`).
+- [x] `npx supabase migration list` no lista las migraciones de prueba `create_test_table`/`drop_test_table` (fueron reparadas).
+- [x] Existe `supabase/migrations/<timestamp>_create_daycares_table.sql` con el SQL de creación + RLS + seed.
+- [x] `supabase list_tables` muestra `public.daycares` con columnas `id uuid`, `name text`, `created_at timestamptz`.
+- [x] `name` es `NOT NULL` (verificable en `information_schema.columns`).
+- [x] RLS está habilitado en `daycares` (`select relrowsecurity, relforcerowsecurity from pg_class where relname='daycares'` → ambos `true`).
+- [x] No existen policies en `daycares` (`select * from pg_policies where tablename='daycares'` → 0 filas).
+- [x] `select id, name from daycares` devuelve exactamente 1 fila: name "Guardería Sala Soles" e id `a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d`.
+- [x] `supabase get_advisors` (security) no reporta `daycares` como tabla sin RLS.
+- [x] Ningún archivo dentro de `app/` fue modificado.
 
 ## Decisiones tomadas y descartadas
 
