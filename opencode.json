@@ -5,5 +5,11 @@
       "type": "local",
       "command": ["npx", "@playwright/mcp@latest"]
     }
-  }
+  },
+  "permission": {
+  "external_directory": {
+    "/tmp/**": "allow"
+  },
+  "bash": "allow"
+}
 }
