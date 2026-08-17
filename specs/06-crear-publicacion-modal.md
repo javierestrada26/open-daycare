@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 01, SPEC 04
 **Date:** 2026-08-17
 
@@ -91,26 +91,26 @@ const RECIPIENTS: { id: Recipient; label: string; avatar?: { letter: string; bgV
 
 ## Criterios de aceptación
 
-- [ ] Pulsar "Nueva publicación" en el Sidebar abre un modal sobre la página en la misma URL, desde `/`, `/kids` y `/kids/[slug]`; la URL no cambia.
-- [ ] El disparador mantiene el aspecto exacto del `<a>` original: gradiente `linear-gradient(180deg,var(--color-primary-gradient-from),var(--color-primary-gradient-to))`, sombra `0 8px 18px -8px rgba(238,129,100,0.75)`, ícono "+" blanco y label "Nueva publicación" `font-extrabold text-[14.5px]`.
-- [ ] El modal oscurece el fondo (overlay `--color-modal-overlay`) y centra una tarjeta `max-width:580px` con `border-radius:24px`, sombra `0 20px 50px -24px rgba(63,54,46,0.35)`, fondo `--color-auth-bg` (`#FBF4EC`) y borde `--color-border-cream` (`#ECE0D0`), idéntica a la referencia.
-- [ ] El header muestra "Cancelar" (izq., `--color-ink-muted` `text-[15px] font-bold`), "Nueva publicación" (centro, Fredoka `text-[18px] font-semibold text-ink`) y "Publicar" (der., `--color-primary` `text-[15px] font-extrabold`) con `justify-between`. No hay botón ×.
-- [ ] PARA muestra 4 pills `rounded-full` con avatar 26×26: Mateo (activa por default: borde `--color-ink`, fondo `--color-ink`, texto blanco, avatar `#A9D9E8`/`#1F7A93`), Sofía (avatar `#F4B8CC`/`#C44A7A`), Benjamín (avatar `#B9DEC4`/`#3E8B62`), "Toda la sala" (sin avatar). Las inactivas usan borde `--color-border-cream`, fondo `--color-surface`, texto `--color-ink-soft`. Single-select: clic en una la activa y desactiva las demás.
-- [ ] TIPO muestra 7 pills `rounded-full` sin borde, cada una con su color propio (Comida `#9A7B1E`/blanco, Siesta `#E7DCF6`/`#7B5FC0`, Actividad `#2E89A6`/blanco, Logro `#CFEBD8`/`#3E9B6C`, Ánimo `#F9D2DE`/`#C56486`, Foto `#FBD8CC`/`#D9684A`, Anuncio `#CCD8F4`/`#4E72C8`). Single-select, default "Actividad"; la pill seleccionada lleva un anillo (`outline outline-2 outline-offset-[3px] outline-ink`) que la distingue.
-- [ ] DESCRIPCIÓN es un `<textarea>` vacío al abrir, con placeholder "Contá cómo le fue hoy…", `min-height:120px`, `resize:vertical`, borde `1.5px solid --color-border-input` (`#EADFD0`), fondo blanco y `text-[15px] leading-[1.5]`. Acepta texto (estado controlado).
-- [ ] FOTOS muestra 2 cajas 96×96 `rounded-[14px]`: caja 1 (fondo `--color-photo-tile-bg` `#F4ECE1`, borde `--color-border-cream`, ícono imagen en `--color-photo-tile-icon` `#CBB89F`); caja 2 (fondo `--color-photo-tile-bg`, borde `1.5px dashed --color-photo-add-border` `#DBCDBA`, ícono "+" en `--color-primary-dark` y label "Agregar" en `--color-ink-placeholder`). Ninguna abre file picker.
-- [ ] Pulsar ESC cierra el modal y resetea el formulario a `{recipient:"Mateo", tipo:"Actividad", descripcion:""}`.
-- [ ] Clic en el backdrop cierra el modal; clics dentro de la tarjeta NO cierran (`stopPropagation`).
-- [ ] Clic en "Cancelar" cierra el modal sin efectos sobre el feed ni ninguna lista.
-- [ ] Clic en "Publicar" cierra el modal sin persistir nada y sin agregar un post al feed — los 3 posts originales de `/` siguen siendo los únicos.
-- [ ] Reabrir el modal tras cerrarlo muestra `recipient:"Mateo"`, `tipo:"Actividad"` y `descripcion:""` (estado reset).
-- [ ] No hay validación client-side, atributos `required`, ni mensajes de error.
-- [ ] `Sidebar` sigue siendo Server Component; `NewPostModal` es la única isla client importada; el resto del JSX del Sidebar (logo, nav, bloque usuario, logout) no se serializa al cliente.
-- [ ] `app/_components/NewPostModal.tsx` es el único componente nuevo; `app/_components/Sidebar.tsx` solo cambia el disparador "Nueva publicación" (y añade el import); `app/page.tsx`, `app/kids/page.tsx`, `app/kids/[slug]/page.tsx`, `QuickComposer.tsx` y `app/layout.tsx` no se modifican.
-- [ ] `app/globals.css` solo añade los 10 tokens nuevos (7 tipo + 3 fotos); el resto de `@theme` queda intacto.
-- [ ] `npm run lint` pasa sin errores; `npx tsc --noEmit` no reporta tipos.
-- [ ] Captura del modal abierto comparada contra `crear-publicacion.dc.html` coincide en estructura, colores, tipografía y espaciados (revisión Playwright en `.playwright-mcp/`).
-- [ ] `/`, `/kids`, `/kids/[slug]` (modal cerrado), `/login` y `/activate-account` funcionan sin regresiones; no se navega a otra ruta al abrir/cerrar el modal.
+- [x] Pulsar "Nueva publicación" en el Sidebar abre un modal sobre la página en la misma URL, desde `/`, `/kids` y `/kids/[slug]`; la URL no cambia.
+- [x] El disparador mantiene el aspecto exacto del `<a>` original: gradiente `linear-gradient(180deg,var(--color-primary-gradient-from),var(--color-primary-gradient-to))`, sombra `0 8px 18px -8px rgba(238,129,100,0.75)`, ícono "+" blanco y label "Nueva publicación" `font-extrabold text-[14.5px]`.
+- [x] El modal oscurece el fondo (overlay `--color-modal-overlay`) y centra una tarjeta `max-width:580px` con `border-radius:24px`, sombra `0 20px 50px -24px rgba(63,54,46,0.35)`, fondo `--color-auth-bg` (`#FBF4EC`) y borde `--color-border-cream` (`#ECE0D0`), idéntica a la referencia.
+- [x] El header muestra "Cancelar" (izq., `--color-ink-muted` `text-[15px] font-bold`), "Nueva publicación" (centro, Fredoka `text-[18px] font-semibold text-ink`) y "Publicar" (der., `--color-primary` `text-[15px] font-extrabold`) con `justify-between`. No hay botón ×.
+- [x] PARA muestra 4 pills `rounded-full` con avatar 26×26: Mateo (activa por default: borde `--color-ink`, fondo `--color-ink`, texto blanco, avatar `#A9D9E8`/`#1F7A93`), Sofía (avatar `#F4B8CC`/`#C44A7A`), Benjamín (avatar `#B9DEC4`/`#3E8B62`), "Toda la sala" (sin avatar). Las inactivas usan borde `--color-border-cream`, fondo `--color-surface`, texto `--color-ink-soft`. Single-select: clic en una la activa y desactiva las demás.
+- [x] TIPO muestra 7 pills `rounded-full` sin borde, cada una con su color propio (Comida `#9A7B1E`/blanco, Siesta `#E7DCF6`/`#7B5FC0`, Actividad `#2E89A6`/blanco, Logro `#CFEBD8`/`#3E9B6C`, Ánimo `#F9D2DE`/`#C56486`, Foto `#FBD8CC`/`#D9684A`, Anuncio `#CCD8F4`/`#4E72C8`). Single-select, default "Actividad"; la pill seleccionada lleva un anillo (`outline outline-2 outline-offset-[3px] outline-ink`) que la distingue.
+- [x] DESCRIPCIÓN es un `<textarea>` vacío al abrir, con placeholder "Contá cómo le fue hoy…", `min-height:120px`, `resize:vertical`, borde `1.5px solid --color-border-input` (`#EADFD0`), fondo blanco y `text-[15px] leading-[1.5]`. Acepta texto (estado controlado).
+- [x] FOTOS muestra 2 cajas 96×96 `rounded-[14px]`: caja 1 (fondo `--color-photo-tile-bg` `#F4ECE1`, borde `--color-border-cream`, ícono imagen en `--color-photo-tile-icon` `#CBB89F`); caja 2 (fondo `--color-photo-tile-bg`, borde `1.5px dashed --color-photo-add-border` `#DBCDBA`, ícono "+" en `--color-primary-dark` y label "Agregar" en `--color-ink-placeholder`). Ninguna abre file picker.
+- [x] Pulsar ESC cierra el modal y resetea el formulario a `{recipient:"Mateo", tipo:"Actividad", descripcion:""}`.
+- [x] Clic en el backdrop cierra el modal; clics dentro de la tarjeta NO cierran (`stopPropagation`).
+- [x] Clic en "Cancelar" cierra el modal sin efectos sobre el feed ni ninguna lista.
+- [x] Clic en "Publicar" cierra el modal sin persistir nada y sin agregar un post al feed — los 3 posts originales de `/` siguen siendo los únicos.
+- [x] Reabrir el modal tras cerrarlo muestra `recipient:"Mateo"`, `tipo:"Actividad"` y `descripcion:""` (estado reset).
+- [x] No hay validación client-side, atributos `required`, ni mensajes de error.
+- [x] `Sidebar` sigue siendo Server Component; `NewPostModal` es la única isla client importada; el resto del JSX del Sidebar (logo, nav, bloque usuario, logout) no se serializa al cliente.
+- [x] `app/_components/NewPostModal.tsx` es el único componente nuevo; `app/_components/Sidebar.tsx` solo cambia el disparador "Nueva publicación" (y añade el import); `app/page.tsx`, `app/kids/page.tsx`, `app/kids/[slug]/page.tsx`, `QuickComposer.tsx` y `app/layout.tsx` no se modifican.
+- [x] `app/globals.css` solo añade los 10 tokens nuevos (7 tipo + 3 fotos); el resto de `@theme` queda intacto.
+- [x] `npm run lint` pasa sin errores; `npx tsc --noEmit` no reporta tipos.
+- [x] Captura del modal abierto comparada contra `crear-publicacion.dc.html` coincide en estructura, colores, tipografía y espaciados (revisión Playwright en `.playwright-mcp/`).
+- [x] `/`, `/kids`, `/kids/[slug]` (modal cerrado), `/login` y `/activate-account` funcionan sin regresiones; no se navega a otra ruta al abrir/cerrar el modal.
 
 ## Decisiones tomadas y descartadas
 
