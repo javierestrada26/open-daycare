@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { NewPostModal } from "./NewPostModal";
+
 type SidebarActive = "feed" | "ninos" | "avisos" | "cuenta";
 
 type NavItemProps = {
@@ -60,24 +62,7 @@ export function Sidebar({ active = "feed" }: SidebarProps) {
         </span>
       </a>
 
-      <a
-        tabIndex={0}
-        className="flex items-center justify-center gap-2 w-full p-3 rounded-[14px] text-white font-extrabold text-[14.5px] mb-[18px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] shadow-[0_8px_18px_-8px_rgba(238,129,100,0.75)]"
-      >
-        <svg
-          width="17"
-          height="17"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#fff"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        Nueva publicación
-      </a>
+      <NewPostModal />
 
       <nav className="flex flex-col gap-1 flex-1">
         <NavItem
