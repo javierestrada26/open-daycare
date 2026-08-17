@@ -8,12 +8,7 @@ type ParentData = {
   status: ParentStatus;
 };
 
-type AddNewData = {
-  addNew: true;
-  label: string;
-};
-
-type LinkedParentProps = ParentData | AddNewData;
+type LinkedParentProps = ParentData;
 
 const STATUS_BADGE: Record<ParentStatus, string> = {
   activa: "bg-badge-activa-bg text-badge-activa",
@@ -21,30 +16,6 @@ const STATUS_BADGE: Record<ParentStatus, string> = {
 };
 
 export function LinkedParent(props: LinkedParentProps) {
-  if ("addNew" in props) {
-    return (
-      <a className="flex items-center gap-3 pt-2">
-        <span className="w-10 h-10 rounded-full border-[1.5px] border-dashed border-[#D8CBBA] flex items-center justify-center shrink-0 text-ink-placeholder">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-        </span>
-        <span className="font-extrabold text-[14.5px] text-primary-dark">
-          {props.label}
-        </span>
-      </a>
-    );
-  }
-
   return (
     <div className="flex items-center gap-3">
       <span

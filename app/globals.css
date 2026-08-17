@@ -70,11 +70,18 @@
   --color-consent-bg: #FBF1D6;
   --color-consent-check: #5FB97E;
   --color-consent-text: #8A7234;
+  --color-consent-label: #A88526;
+  --color-consent-border: #E6D08A;
   --color-brand-panel-1: #F6A98E;
   --color-brand-panel-3: #EC7E62;
 
   /* Modal overlay */
   --color-modal-overlay: rgba(63, 54, 46, 0.35);
+
+  /* Link parent modal */
+  --color-info-banner-bg: #E3ECFB;
+  --color-info-banner-text: #3F5694;
+  --color-pill-active-border: #9FB8EC;
 }
 
 @theme inline {
