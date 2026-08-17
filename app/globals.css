@@ -82,6 +82,20 @@
   --color-info-banner-bg: #E3ECFB;
   --color-info-banner-text: #3F5694;
   --color-pill-active-border: #9FB8EC;
+
+  /* New post modal — TIPO pills */
+  --color-tipo-comida: #9A7B1E;
+  --color-tipo-siesta-bg: #E7DCF6;
+  --color-tipo-siesta: #7B5FC0;
+  --color-tipo-animo-bg: #F9D2DE;
+  --color-tipo-animo: #C56486;
+  --color-tipo-foto-bg: #FBD8CC;
+  --color-tipo-foto: #D9684A;
+
+  /* New post modal — FOTOS tiles */
+  --color-photo-tile-bg: #F4ECE1;
+  --color-photo-tile-icon: #CBB89F;
+  --color-photo-add-border: #DBCDBA;
 }
 
 @theme inline {
