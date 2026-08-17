@@ -3,6 +3,7 @@ import { Sidebar } from "../../_components/Sidebar";
 import { AllergyBox } from "../../_components/AllergyBox";
 import { InfoRow } from "../../_components/InfoRow";
 import { LinkedParent } from "../../_components/LinkedParent";
+import { LinkParentModal } from "../../_components/LinkParentModal";
 
 type ParentStatus = "activa" | "pendiente";
 
@@ -155,7 +156,7 @@ export default async function KidProfilePage({
                   {kid.parents.map((parent) => (
                     <LinkedParent key={parent.name} {...parent} />
                   ))}
-                  <LinkedParent addNew label="Vincular otro padre" />
+                  <LinkParentModal kidName={kid.name} />
                 </div>
               </div>
             </div>
