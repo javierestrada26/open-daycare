@@ -11,6 +11,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Stack
 
 - Next.js **16.3.0** with App Router (`app/`), React **19.2.8**, TypeScript strict, Tailwind **v4** (via `@tailwindcss/postcss`, no `tailwind.config.js`).
+- Supabase clients for Next.js (SSR): `@supabase/supabase-js` + `@supabase/ssr` — used to interact with the database, Auth, Realtime, and Storage from the app.
 - Path alias: `@/*` → repo root (`./*`).
 
 ## Commands
@@ -33,6 +34,25 @@ Locked in `skills-lock.json`. Load the relevant skill before working in its doma
 - **spec-verifier** subagent: read-only quality review of a spec before implementation. Invoke it with `@spec-verifier <spec-name>` (e.g. `@spec-verifier 01-feed-home`); opencode will generate a task prompt and call the `spec-verifier` subagent. The verifier checks structure, clarity, testable acceptance criteria, inter-section consistency, and the state field ("Approved"/"Aprobado" gate for `spec-impl`), returning an APPROVED/CHANGES_NEEDED verdict. It does NOT modify files nor verify the implementation — only the spec document quality.
 - **supabase**: load for ANY task involving Supabase — products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues), SSR integrations (`supabase-js`, `@supabase/ssr`), auth/sessions/RLS, schema changes, migrations, and debugging errors or logs.
 - **supabase-postgres-best-practices**: load BEFORE creating or altering tables/columns, schema design, migrations, RLS policies and tests, indexes, triggers, DB functions, queues (`pg_cron`/`pgmq`), vector search (`pgvector`), or diagnosing slow queries, timeouts, locking, bloat, and connection issues.
+
+## Clientes de Supabase en la app
+
+La app se conecta a Supabase a través de los paquetes `@supabase/supabase-js` y `@supabase/ssr` (helpers en `utils/supabase/`). Siempre use estos helpers — no instancie clientes Supabase a mano.
+
+- `utils/supabase/server.ts` → `createClient(cookieStore)` para **Server Components, Route Handlers y Server Actions**. Pase `await cookies()`. Lanza excepción si se llama fuera de un contexto con cookies.
+- `utils/supabase/client.ts` → `createClient()` para **Client Components**. Usa `createBrowserClient` (autogestiona cookies en el navegador).
+- `utils/supabase/middleware.ts` → `createClient(request)` helper para **middleware**. Devuelve `{ supabase, supabaseResponse }` para poder refrescar la sesión y devolver la response modificada.
+- `middleware.ts` (raíz) → invoca el helper de middleware y llama `supabase.auth.getUser()` en cada request para mantener la sesión fresca. El matcher excluye `_next/static`, `_next/image`, `favicon.ico` y `public/`.
+
+**Variables de entorno** (`.env.local`, no se commitea — cubierto por `.gitignore` `.env*`):
+- `NEXT_PUBLIC_SUPABASE_URL` — URL del proyecto.
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — publishable key (formato `sb_publishable_...`). Prefiera esta sobre la legacy anon key.
+
+**Convenciones:**
+- Para leer/escribir datos use el cliente que corresponda al runtime (server vs browser). Nunca use el browser client en el servidor ni viceversa.
+- Las cookies de sesión las gestiona `@supabase/ssr` automáticamente vía los helpers — no las manipule a mano.
+- El RLS protege los datos; el cliente solo ve lo que el usuario autenticado puede ver. Para verificaciones de Auth use `supabase.auth.getUser()` (server) y `supabase.auth.getClaims()` cuando aplique según la versión de `@supabase/ssr`.
+- Los cambios de schema **no** se hacen desde la app — van en migraciones (ver "Reglas de base de datos").
 
 ## Workflow
 
