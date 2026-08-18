@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 07
 **Date:** 2026-08-17
 
@@ -134,26 +134,26 @@ Convención (del doc de referencia): PK `id uuid` (sin `default gen_random_uuid(
 
 ## Criterios de aceptación
 
-- [ ] Existe `supabase/migrations/<timestamp>_create_users_table.sql` con el SQL completo (CREATE TYPE × 2, CREATE TABLE, INDEX, RLS, 2 funciones, 2 triggers, REVOKE, seed staff).
-- [ ] `npx supabase migration list` muestra `create_users_table` como aplicada al remoto.
-- [ ] `supabase list_tables` muestra `public.users` con las 9 columnas y tipos listados arriba, PK en `id`, FK a `auth.users(id) ON DELETE CASCADE` y a `public.daycares(id) ON DELETE RESTRICT`.
-- [ ] `daycare_id`, `role`, `status`, `full_name`, `notify_on_post`, `daily_summary_enabled`, `created_at`, `updated_at` son `NOT NULL` (verificable en `information_schema.columns`).
-- [ ] `avatar_url` es la única columna nullable de `users`.
-- [ ] `status` tiene `DEFAULT 'active'::user_status`; `notify_on_post` y `daily_summary_enabled` tienen `DEFAULT true`.
-- [ ] Los enums `user_role` y `user_status` existen con sus valores exactos: `staff/parent/admin` y `pending/active` (`pg_enum`).
-- [ ] Existe el índice `users_daycare_id_idx` sobre `public.users(daycare_id)` (`pg_indexes`).
-- [ ] RLS habilitado y forzado en `users` (`pg_class.relrowsecurity` y `relforcerowsecurity` = `true`).
-- [ ] No existen policies en `users` (`pg_policies` → 0 filas).
-- [ ] Existe el trigger `users_set_updated_at` sobre `public.users` (`BEFORE UPDATE`) invocando `public.set_updated_at()`.
-- [ ] Existe el trigger `on_auth_user_created` sobre `auth.users` (`AFTER INSERT`) invocando `public.handle_new_auth_user()`.
-- [ ] Las funciones `set_updated_at()` y `handle_new_auth_user()` tienen `revoke execute from public, anon, authenticated` (verificable con `has_function_privilege('anon','public.set_updated_at()','execute')` → `false`).
-- [ ] `handle_new_auth_user()` es `SECURITY DEFINER` y tiene `set search_path = public` (`pg_proc.prosecdef = true`, `proconfig` incluye `search_path=public`).
-- [ ] `select id, email from auth.users where email='javier@google.com'` devuelve 1 fila con `id = 'b0c1d2e3-f4a5-6b7c-8d9e-0f1a2b3c4d5e'` y `email_confirmed_at IS NOT NULL`.
-- [ ] `select id, daycare_id, role, status, full_name from public.users where email='javier@google.com'` (vía join) → 1 fila con `role=staff`, `status=active`, `full_name='Javier'`, `daycare_id='a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d'`, `id='b0c1d2e3-...'` (mismo UUID que auth.users — confirma que el trigger creó el perfil).
-- [ ] `select count(*) from public.users` = `1` (solo el staff seed).
-- [ ] `supabase get_advisors` (security) no reporta `users` como tabla sin RLS.
-- [ ] `supabase get_advisors` (performance) no reporta warnings críticos sobre `users`.
-- [ ] Ningún archivo dentro de `app/` fue modificado.
+- [x] Existe `supabase/migrations/<timestamp>_create_users_table.sql` con el SQL completo (CREATE TYPE × 2, CREATE TABLE, INDEX, RLS, 2 funciones, 2 triggers, REVOKE, seed staff).
+- [x] `npx supabase migration list` muestra `create_users_table` como aplicada al remoto.
+- [x] `supabase list_tables` muestra `public.users` con las 9 columnas y tipos listados arriba, PK en `id`, FK a `auth.users(id) ON DELETE CASCADE` y a `public.daycares(id) ON DELETE RESTRICT`.
+- [x] `daycare_id`, `role`, `status`, `full_name`, `notify_on_post`, `daily_summary_enabled`, `created_at`, `updated_at` son `NOT NULL` (verificable en `information_schema.columns`).
+- [x] `avatar_url` es la única columna nullable de `users`.
+- [x] `status` tiene `DEFAULT 'active'::user_status`; `notify_on_post` y `daily_summary_enabled` tienen `DEFAULT true`.
+- [x] Los enums `user_role` y `user_status` existen con sus valores exactos: `staff/parent/admin` y `pending/active` (`pg_enum`).
+- [x] Existe el índice `users_daycare_id_idx` sobre `public.users(daycare_id)` (`pg_indexes`).
+- [x] RLS habilitado y forzado en `users` (`pg_class.relrowsecurity` y `relforcerowsecurity` = `true`).
+- [x] No existen policies en `users` (`pg_policies` → 0 filas).
+- [x] Existe el trigger `users_set_updated_at` sobre `public.users` (`BEFORE UPDATE`) invocando `public.set_updated_at()`.
+- [x] Existe el trigger `on_auth_user_created` sobre `auth.users` (`AFTER INSERT`) invocando `public.handle_new_auth_user()`.
+- [x] Las funciones `set_updated_at()` y `handle_new_auth_user()` tienen `revoke execute from public, anon, authenticated` (verificable con `has_function_privilege('anon','public.set_updated_at()','execute')` → `false`).
+- [x] `handle_new_auth_user()` es `SECURITY DEFINER` y tiene `set search_path = public` (`pg_proc.prosecdef = true`, `proconfig` incluye `search_path=public`).
+- [x] `select id, email from auth.users where email='javier@google.com'` devuelve 1 fila con `id = 'b0c1d2e3-f4a5-6b7c-8d9e-0f1a2b3c4d5e'` y `email_confirmed_at IS NOT NULL`.
+- [x] `select id, daycare_id, role, status, full_name from public.users where email='javier@google.com'` (vía join) → 1 fila con `role=staff`, `status=active`, `full_name='Javier'`, `daycare_id='a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d'`, `id='b0c1d2e3-...'` (mismo UUID que auth.users — confirma que el trigger creó el perfil).
+- [x] `select count(*) from public.users` = `1` (solo el staff seed).
+- [x] `supabase get_advisors` (security) no reporta `users` como tabla sin RLS.
+- [x] `supabase get_advisors` (performance) no reporta warnings críticos sobre `users`.
+- [x] Ningún archivo dentro de `app/` fue modificado.
 
 ## Decisiones tomadas y descartadas
 
