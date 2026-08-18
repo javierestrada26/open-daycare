@@ -48,6 +48,7 @@ Locked in `skills-lock.json`. Load the relevant skill before working in its doma
 - `execute_sql` (MCP) es **solo lectura** para verificar (ej. `select`, `information_schema`, `pg_class`, `pg_policies`). No use `execute_sql` para `create`/`alter`/`drop`/`insert`/`update`/`delete` de schema o seed — eso va en una migración.
 - `apply_migration` (MCP) es un **fallback de contingencia** únicamente cuando la Supabase CLI no se pueda autenticar/enlazar (sin PAT). Si se usa, registre la decisión en el spec y luego reconcilie el historial remoto con `npx supabase db push` o `migration repair` para evitar drift.
 - Antes de tocar schema: cargue la skill `supabase-postgres-best-practices`. Cualquier desviación de sus reglas (ej. PK `uuid` vs `bigint identity`) debe documentarse explícitamente en el spec bajo "Decisiones tomadas y descartadas".
+- **Todo spec relacionado con la base de datos debe ir en `specs/database/`.** Esto incluye specs que definan tablas, columnas, relaciones, RLS, índices, triggers, funciones DB, migraciones, seeds, o cualquier cambio de schema. Los specs que no toquen la base de datos van en la raíz de `specs/` o en su subcarpeta correspondiente.
 
 
 ## Reglas de código
