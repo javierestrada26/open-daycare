@@ -3,10 +3,23 @@
 import { useState } from "react";
 import Link from "next/link";
 import { SunMark } from "../_components/SunMark";
+import { signIn } from "@/app/_actions/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function onSubmit(formData: FormData) {
+    setError(null);
+    setLoading(true);
+    const result = await signIn(formData);
+    setLoading(false);
+    if (result?.error) {
+      setError(result.error);
+    }
+  }
 
   return (
     <div className="min-h-screen grid grid-cols-[1.05fr_1fr] bg-auth-bg">
@@ -49,42 +62,51 @@ export default function LoginPage() {
             Ingresá para ver el día de hoy.
           </p>
 
-          <div className="text-[12px] font-bold tracking-[0.7px] text-ink-muted mb-[8px]">
-            EMAIL
-          </div>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-[16px] py-[14px] rounded-[14px] border-[1.5px] border-border-input bg-white text-[15px] text-ink mb-[18px]"
-          />
+          <form action={onSubmit}>
+            <div className="text-[12px] font-bold tracking-[0.7px] text-ink-muted mb-[8px]">
+              EMAIL
+            </div>
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-[16px] py-[14px] rounded-[14px] border-[1.5px] border-border-input bg-white text-[15px] text-ink mb-[18px]"
+            />
 
-          <div className="text-[12px] font-bold tracking-[0.7px] text-ink-muted mb-[8px]">
-            CONTRASEÑA
-          </div>
-          <input
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-[16px] py-[14px] rounded-[14px] border-[1.5px] border-border-input bg-white text-[15px] text-ink mb-[10px]"
-          />
+            <div className="text-[12px] font-bold tracking-[0.7px] text-ink-muted mb-[8px]">
+              CONTRASEÑA
+            </div>
+            <input
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-[16px] py-[14px] rounded-[14px] border-[1.5px] border-border-input bg-white text-[15px] text-ink mb-[10px]"
+            />
 
-          <div className="text-right mb-[20px]">
+            <div className="text-right mb-[20px]">
+              <button
+                type="button"
+                className="text-primary-dark text-[13.5px] font-bold cursor-pointer"
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
+
             <button
-              type="button"
-              className="text-primary-dark text-[13.5px] font-bold cursor-pointer"
+              type="submit"
+              disabled={loading}
+              className="block text-center w-full p-[15px] rounded-[15px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] text-white font-extrabold text-[16px] cursor-pointer shadow-[0_10px_22px_-8px_rgba(238,129,100,0.7)]"
             >
-              ¿Olvidaste tu contraseña?
+              {loading ? "Ingresando…" : "Iniciar sesión"}
             </button>
-          </div>
 
-          <button
-            type="button"
-            className="block text-center w-full p-[15px] rounded-[15px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] text-white font-extrabold text-[16px] cursor-pointer shadow-[0_10px_22px_-8px_rgba(238,129,100,0.7)]"
-          >
-            Iniciar sesión
-          </button>
+            {error && (
+              <p className="text-primary-dark text-[13.5px] mt-[10px]">{error}</p>
+            )}
+          </form>
 
           <p className="text-center mt-[24px] text-ink-muted text-[14.5px]">
             ¿Te invitó la guardería?{" "}
