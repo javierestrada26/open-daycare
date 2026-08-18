@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { NewPostModal } from "./NewPostModal";
+import { signOut } from "@/app/_actions/auth";
 
 type SidebarActive = "feed" | "ninos" | "avisos" | "cuenta";
 
@@ -159,24 +160,27 @@ export function Sidebar({ active = "feed" }: SidebarProps) {
               Maestra · Soles
             </span>
           </span>
-          <a
-            title="Cerrar sesión"
-            tabIndex={0}
-            className="shrink-0 w-8 h-8 rounded-[10px] bg-app-bg text-ink-muted flex items-center justify-center"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <form action={signOut} className="shrink-0">
+            <button
+              type="submit"
+              aria-label="Cerrar sesión"
+              title="Cerrar sesión"
+              className="w-8 h-8 rounded-[10px] bg-app-bg text-ink-muted flex items-center justify-center cursor-pointer"
             >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
-            </svg>
-          </a>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+              </svg>
+            </button>
+          </form>
         </div>
       </div>
     </aside>
