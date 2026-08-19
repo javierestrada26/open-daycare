@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 01, SPEC 03, SPEC 08
 **Date:** 2026-08-18
 
@@ -61,22 +61,22 @@ export async function signOut(): Promise<void>;
 
 ## Criterios de aceptación
 
-- [ ] Visitar `/`, `/kids` o `/kids/[slug]` sin sesión redirige a `/login` (middleware, antes de render).
-- [ ] Visitar `/login` o `/activate-account` con sesión redirige a `/`.
-- [ ] El matcher excluye `_next/static`, `_next/image`, `favicon.ico`, `public/` (sin regresión).
-- [ ] Las cookies refrescadas se preservan en los responses de redirect.
-- [ ] `app/_actions/auth.ts` expone `signIn` y `signOut` (`'use server'`) con `createClient(await cookies())`.
-- [ ] Login con `javier@google.com`/`Abc123456` redirige a `/` y deja sesión activa.
-- [ ] Credenciales inválidas NO redirigen: muestran "Email o contraseña incorrectos" y el botón se rehabilita.
-- [ ] El botón "Iniciar sesión" muestra "Ingresando…" y se deshabilita durante el submit.
-- [ ] Clic en logout del Sidebar redirige a `/login` y destruye la sesión.
-- [ ] `app/login/page.tsx` conserva layout dos columnas, `<SunMark/>`, panel de marca, inputs, "¿Olvidaste tu contraseña?" (no funcional) y link "Activá tu cuenta" (sin regresión vs. SPEC 03).
-- [ ] `app/_components/Sidebar.tsx` permanece Server Component; `NewPostModal` única isla client; bloque "Caro Giménez" y nav intactos.
-- [ ] "¿Olvidaste tu contraseña?" sigue sin hacer nada.
-- [ ] Feed y `/kids` siguen mostrando mocks de SPEC 01-02.
-- [ ] Cero DDL (no se crean/modifican tablas, columnas, RLS, triggers ni migraciones).
-- [ ] `app/activate-account/page.tsx`, `app/page.tsx`, `app/kids/*`, `app/layout.tsx` y `utils/supabase/*` sin cambios.
-- [ ] `npm run lint`, `npx tsc --noEmit` y `npm run build` pasan.
+- [x] Visitar `/`, `/kids` o `/kids/[slug]` sin sesión redirige a `/login` (middleware, antes de render).
+- [x] Visitar `/login` o `/activate-account` con sesión redirige a `/`.
+- [x] El matcher excluye `_next/static`, `_next/image`, `favicon.ico`, `public/` (sin regresión).
+- [x] Las cookies refrescadas se preservan en los responses de redirect.
+- [x] `app/_actions/auth.ts` expone `signIn` y `signOut` (`'use server'`) con `createClient(await cookies())`.
+- [x] Login con `javier@google.com`/`Abc123456` redirige a `/` y deja sesión activa.
+- [x] Credenciales inválidas NO redirigen: muestran "Email o contraseña incorrectos" y el botón se rehabilita.
+- [x] El botón "Iniciar sesión" muestra "Ingresando…" y se deshabilita durante el submit.
+- [x] Clic en logout del Sidebar redirige a `/login` y destruye la sesión.
+- [x] `app/login/page.tsx` conserva layout dos columnas, `<SunMark/>`, panel de marca, inputs, "¿Olvidaste tu contraseña?" (no funcional) y link "Activá tu cuenta" (sin regresión vs. SPEC 03).
+- [x] `app/_components/Sidebar.tsx` permanece Server Component; `NewPostModal` única isla client; bloque "Caro Giménez" y nav intactos.
+- [x] "¿Olvidaste tu contraseña?" sigue sin hacer nada.
+- [x] Feed y `/kids` siguen mostrando mocks de SPEC 01-02.
+- [x] Cero DDL (no se crean/modifican tablas, columnas, RLS, triggers ni migraciones).
+- [x] `app/activate-account/page.tsx`, `app/page.tsx`, `app/kids/*`, `app/layout.tsx` y `utils/supabase/*` sin cambios.
+- [x] `npm run lint`, `npx tsc --noEmit` y `npm run build` pasan.
 
 ## Decisiones tomadas y descartadas
 
