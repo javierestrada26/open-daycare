@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { RoomVm } from "../_lib/kids";
+import { BirthDatePicker, type BirthDateValue } from "./BirthDatePicker";
 import { createKid } from "@/app/_actions/kids";
 
 type FormState = {
   name: string;
-  birthdate: string;
   sala: string;
   allergies: string;
   medicalNotes: string;
@@ -19,7 +19,6 @@ type AddKidModalProps = {
 function emptyForm(rooms: RoomVm[]): FormState {
   return {
     name: "",
-    birthdate: "",
     sala: rooms[0]?.id ?? "",
     allergies: "",
     medicalNotes: "",
@@ -29,12 +28,18 @@ function emptyForm(rooms: RoomVm[]): FormState {
 export function AddKidModal({ rooms }: AddKidModalProps) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<FormState>(() => emptyForm(rooms));
+  const [birthDate, setBirthDate] = useState<BirthDateValue>({
+    day: null,
+    month: null,
+    year: null,
+  });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const close = useCallback(() => {
     setOpen(false);
     setForm(emptyForm(rooms));
+    setBirthDate({ day: null, month: null, year: null });
     setError(null);
     setSaving(false);
   }, [rooms]);
@@ -50,10 +55,24 @@ export function AddKidModal({ rooms }: AddKidModalProps) {
 
   async function handleSave() {
     setError(null);
+
+    if (
+      birthDate.day === null ||
+      birthDate.month === null ||
+      birthDate.year === null
+    ) {
+      setError("Completá la fecha de nacimiento.");
+      return;
+    }
+
+    const composed = `${String(birthDate.day).padStart(2, "0")}/${String(
+      birthDate.month,
+    ).padStart(2, "0")}/${birthDate.year}`;
+
     setSaving(true);
     const result = await createKid({
       fullName: form.name,
-      birthDate: form.birthdate,
+      birthDate: composed,
       roomId: form.sala,
       allergiesText: form.allergies,
       medicalNotes: form.medicalNotes,
@@ -133,53 +152,44 @@ export function AddKidModal({ rooms }: AddKidModalProps) {
                 />
               </div>
 
-              <div className="flex gap-[14px] mb-[18px]">
-                <div className="flex-1">
-                  <div className="text-[12px] font-extrabold tracking-[0.7px] text-ink-muted mb-2">
-                    FECHA DE NACIMIENTO
-                  </div>
-                  <input
-                    type="text"
-                    value={form.birthdate}
-                    onChange={(e) =>
-                      setForm({ ...form, birthdate: e.target.value })
-                    }
-                    placeholder="dd/mm/aaaa"
-                    className="w-full px-[16px] py-[13px] rounded-[14px] border-[1.5px] border-solid border-border-input bg-white text-[15px] text-ink outline-none"
-                  />
+              <div className="mb-[18px]">
+                <div className="text-[12px] font-extrabold tracking-[0.7px] text-ink-muted mb-2">
+                  FECHA DE NACIMIENTO
                 </div>
-                <div className="flex-1">
-                  <div className="text-[12px] font-extrabold tracking-[0.7px] text-ink-muted mb-2">
-                    SALA
-                  </div>
-                  <div className="relative">
-                    <select
-                      value={form.sala}
-                      onChange={(e) =>
-                        setForm({ ...form, sala: e.target.value })
-                      }
-                      className="w-full appearance-none px-[16px] py-[13px] pr-[40px] rounded-[14px] border-[1.5px] border-solid border-border-input bg-white text-[15px] text-ink font-bold outline-none"
-                    >
-                      {rooms.map((room) => (
-                        <option key={room.id} value={room.id}>
-                          {room.name}
-                        </option>
-                      ))}
-                    </select>
-                    <svg
-                      className="pointer-events-none absolute right-[16px] top-1/2 -translate-y-1/2"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#B0A290"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
-                  </div>
+                <BirthDatePicker value={birthDate} onChange={setBirthDate} />
+              </div>
+
+              <div className="mb-[18px]">
+                <div className="text-[12px] font-extrabold tracking-[0.7px] text-ink-muted mb-2">
+                  SALA
+                </div>
+                <div className="relative">
+                  <select
+                    value={form.sala}
+                    onChange={(e) =>
+                      setForm({ ...form, sala: e.target.value })
+                    }
+                    className="w-full appearance-none px-[16px] py-[13px] pr-[40px] rounded-[14px] border-[1.5px] border-solid border-border-input bg-white text-[15px] text-ink font-bold outline-none"
+                  >
+                    {rooms.map((room) => (
+                      <option key={room.id} value={room.id}>
+                        {room.name}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    className="pointer-events-none absolute right-[16px] top-1/2 -translate-y-1/2"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#B0A290"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
                 </div>
               </div>
 
