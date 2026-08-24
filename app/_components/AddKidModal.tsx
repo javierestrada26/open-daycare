@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { RoomVm } from "../_lib/kids";
+import { createKid } from "@/app/_actions/kids";
 
 type FormState = {
   name: string;
@@ -28,10 +29,14 @@ function emptyForm(rooms: RoomVm[]): FormState {
 export function AddKidModal({ rooms }: AddKidModalProps) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<FormState>(() => emptyForm(rooms));
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const close = useCallback(() => {
     setOpen(false);
     setForm(emptyForm(rooms));
+    setError(null);
+    setSaving(false);
   }, [rooms]);
 
   useEffect(() => {
@@ -42,6 +47,24 @@ export function AddKidModal({ rooms }: AddKidModalProps) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, close]);
+
+  async function handleSave() {
+    setError(null);
+    setSaving(true);
+    const result = await createKid({
+      fullName: form.name,
+      birthDate: form.birthdate,
+      roomId: form.sala,
+      allergiesText: form.allergies,
+      medicalNotes: form.medicalNotes,
+    });
+    setSaving(false);
+    if (result?.error) {
+      setError(result.error);
+      return;
+    }
+    close();
+  }
 
   return (
     <>
@@ -88,10 +111,11 @@ export function AddKidModal({ rooms }: AddKidModalProps) {
               </span>
               <button
                 type="button"
-                onClick={close}
+                onClick={handleSave}
+                disabled={saving}
                 className="text-primary text-[15px] font-extrabold"
               >
-                Guardar
+                {saving ? "Guardando…" : "Guardar"}
               </button>
             </div>
 
@@ -186,6 +210,12 @@ export function AddKidModal({ rooms }: AddKidModalProps) {
                   className="w-full min-h-[90px] resize-y px-[16px] py-[13px] rounded-[14px] border-[1.5px] border-solid border-border-input bg-white text-[15px] text-ink leading-[1.5] outline-none"
                 />
               </div>
+
+              {error && (
+                <p className="text-primary-dark text-[13.5px] mt-[14px]">
+                  {error}
+                </p>
+              )}
             </div>
           </div>
         </div>
