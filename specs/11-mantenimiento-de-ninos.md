@@ -1,4 +1,4 @@
-**State:** Borrador
+**State:** Aprobado
 **Depends on:** SPEC 02, SPEC 04, SPEC 09, SPEC 10
 **Date:** 2026-08-24
 
