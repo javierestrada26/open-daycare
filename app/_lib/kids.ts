@@ -122,3 +122,14 @@ export function allergyBadge(tags: string[]): KidBadgeLabel {
   }
   return "VINCULAR";
 }
+
+const ALLERGY_EN_TO_ES: Record<string, string> = {
+  peanut: "MANÍ",
+  lactose: "LACTOSA",
+  gluten: "GLUTEN",
+  egg: "HUEVO",
+};
+
+export function allergyLabel(tag: string): string {
+  return ALLERGY_EN_TO_ES[tag] ?? tag.toUpperCase();
+}
