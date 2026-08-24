@@ -7,7 +7,6 @@ import { createKid } from "@/app/_actions/kids";
 
 type FormState = {
   name: string;
-  birthdate: string;
   sala: string;
   allergies: string;
   medicalNotes: string;
@@ -20,7 +19,6 @@ type AddKidModalProps = {
 function emptyForm(rooms: RoomVm[]): FormState {
   return {
     name: "",
-    birthdate: "",
     sala: rooms[0]?.id ?? "",
     allergies: "",
     medicalNotes: "",
@@ -57,10 +55,24 @@ export function AddKidModal({ rooms }: AddKidModalProps) {
 
   async function handleSave() {
     setError(null);
+
+    if (
+      birthDate.day === null ||
+      birthDate.month === null ||
+      birthDate.year === null
+    ) {
+      setError("Completá la fecha de nacimiento.");
+      return;
+    }
+
+    const composed = `${String(birthDate.day).padStart(2, "0")}/${String(
+      birthDate.month,
+    ).padStart(2, "0")}/${birthDate.year}`;
+
     setSaving(true);
     const result = await createKid({
       fullName: form.name,
-      birthDate: form.birthdate,
+      birthDate: composed,
       roomId: form.sala,
       allergiesText: form.allergies,
       medicalNotes: form.medicalNotes,
