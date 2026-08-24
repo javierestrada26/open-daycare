@@ -1,35 +1,39 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-
-type Sala = "Soles" | "Lunas" | "Estrellas";
+import type { RoomVm } from "../_lib/kids";
 
 type FormState = {
   name: string;
   birthdate: string;
-  sala: Sala;
+  sala: string;
   allergies: string;
   medicalNotes: string;
 };
 
-const EMPTY_FORM: FormState = {
-  name: "",
-  birthdate: "",
-  sala: "Soles",
-  allergies: "",
-  medicalNotes: "",
+type AddKidModalProps = {
+  rooms: RoomVm[];
 };
 
-export function AddKidModal() {
+function emptyForm(rooms: RoomVm[]): FormState {
+  return {
+    name: "",
+    birthdate: "",
+    sala: rooms[0]?.id ?? "",
+    allergies: "",
+    medicalNotes: "",
+  };
+}
+
+export function AddKidModal({ rooms }: AddKidModalProps) {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [form, setForm] = useState<FormState>(() => emptyForm(rooms));
 
   const close = useCallback(() => {
     setOpen(false);
-    setForm(EMPTY_FORM);
-  }, []);
+    setForm(emptyForm(rooms));
+  }, [rooms]);
 
-  // ESC closes the modal while it is open.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -128,13 +132,15 @@ export function AddKidModal() {
                     <select
                       value={form.sala}
                       onChange={(e) =>
-                        setForm({ ...form, sala: e.target.value as Sala })
+                        setForm({ ...form, sala: e.target.value })
                       }
                       className="w-full appearance-none px-[16px] py-[13px] pr-[40px] rounded-[14px] border-[1.5px] border-solid border-border-input bg-white text-[15px] text-ink font-bold outline-none"
                     >
-                      <option value="Soles">Soles</option>
-                      <option value="Lunas">Lunas</option>
-                      <option value="Estrellas">Estrellas</option>
+                      {rooms.map((room) => (
+                        <option key={room.id} value={room.id}>
+                          {room.name}
+                        </option>
+                      ))}
                     </select>
                     <svg
                       className="pointer-events-none absolute right-[16px] top-1/2 -translate-y-1/2"
