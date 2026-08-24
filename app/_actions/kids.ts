@@ -42,7 +42,7 @@ export async function createKid(input: {
     birth.getTime() > today.getTime() ||
     !UUID_RE.test(input.roomId)
   ) {
-    return { error: "Revisá el nombre y la fecha (dd/mm/aaaa)." };
+    return { error: "Revisá el nombre y la fecha de nacimiento." };
   }
 
   const birthDate = `${birth.getFullYear()}-${String(
