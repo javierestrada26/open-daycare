@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 07, SPEC 08
 **Date:** 2026-08-24
 
@@ -144,21 +144,21 @@ Convención (del doc de referencia): PK `id` `uuid` default `gen_random_uuid()`,
 
 ## Criterios de aceptación
 
-- [ ] Existe `supabase/migrations/<timestamp>_create_rooms_children_tables.sql` con el SQL de enum + 2 tablas + índices + trigger + función + 3 policies + seed.
-- [ ] `supabase list_tables` muestra `public.rooms` con `id uuid`, `daycare_id uuid`, `name text`, `created_at timestamptz`.
-- [ ] `supabase list_tables` muestra `public.children` con las 11 columnas del doc de referencia §4 y tipos correctos.
-- [ ] `child_status` existe como enum con valores `active`/`archived` (`select enum_range(null::public.child_status)` → ambos).
-- [ ] `rooms_daycare_id_idx` y `children_room_id_idx` existen (`select indexname from pg_indexes where tablename in ('rooms','children')`).
-- [ ] El trigger `children_set_updated_at` existe sobre `children` y reutiliza `public.set_updated_at()` (sin crear una función nueva).
-- [ ] RLS `enable` + `force` activos en `rooms` y `children` (`relrowsecurity` y `relforcerowsecurity` ambos `true`).
-- [ ] Existen exactamente 3 policies: `rooms_select_same_daycare`, `children_select_same_daycare`, `children_insert_same_daycare` (`pg_policies`).
-- [ ] No existen policies `update`/`delete` sobre `rooms` o `children`.
-- [ ] `public.current_daycare_id()` existe, es `security definer`, `revoke` de `public`/`anon`, `grant` a `authenticated`.
-- [ ] `select id, name from public.rooms order by created_at` devuelve exactamente 3 filas en orden Soles, Lunas, Estrellas con los UUIDs fijos del spec.
-- [ ] `select count(*) from public.children` devuelve `0` (sin niños sembrados).
-- [ ] `supabase get_advisors` (security) no reporta `rooms` ni `children` como tablas sin RLS ni sin policies.
-- [ ] `supabase get_advisors` (performance) no reporta warnings de índices faltantes en FKs de `rooms`/`children`.
-- [ ] Ningún archivo dentro de `app/` fue modificado.
+- [x] Existe `supabase/migrations/<timestamp>_create_rooms_children_tables.sql` con el SQL de enum + 2 tablas + índices + trigger + función + 3 policies + seed.
+- [x] `supabase list_tables` muestra `public.rooms` con `id uuid`, `daycare_id uuid`, `name text`, `created_at timestamptz`.
+- [x] `supabase list_tables` muestra `public.children` con las 11 columnas del doc de referencia §4 y tipos correctos.
+- [x] `child_status` existe como enum con valores `active`/`archived` (`select enum_range(null::public.child_status)` → ambos).
+- [x] `rooms_daycare_id_idx` y `children_room_id_idx` existen (`select indexname from pg_indexes where tablename in ('rooms','children')`).
+- [x] El trigger `children_set_updated_at` existe sobre `children` y reutiliza `public.set_updated_at()` (sin crear una función nueva).
+- [x] RLS `enable` + `force` activos en `rooms` y `children` (`relrowsecurity` y `relforcerowsecurity` ambos `true`).
+- [x] Existen exactamente 3 policies: `rooms_select_same_daycare`, `children_select_same_daycare`, `children_insert_same_daycare` (`pg_policies`).
+- [x] No existen policies `update`/`delete` sobre `rooms` o `children`.
+- [x] `public.current_daycare_id()` existe, es `security definer`, `revoke` de `public`/`anon`, `grant` a `authenticated`.
+- [x] `select id, name from public.rooms order by created_at` devuelve exactamente 3 filas en orden Soles, Lunas, Estrellas con los UUIDs fijos del spec.
+- [x] `select count(*) from public.children` devuelve `0` (sin niños sembrados).
+- [x] `supabase get_advisors` (security) no reporta `rooms` ni `children` como tablas sin RLS ni sin policies.
+- [x] `supabase get_advisors` (performance) no reporta warnings de índices faltantes en FKs de `rooms`/`children`.
+- [x] Ningún archivo dentro de `app/` fue modificado.
 
 ## Decisiones tomadas y descartadas
 
