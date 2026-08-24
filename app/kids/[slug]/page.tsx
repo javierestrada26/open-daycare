@@ -1,58 +1,35 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import { Sidebar } from "../../_components/Sidebar";
 import { AllergyBox } from "../../_components/AllergyBox";
 import { InfoRow } from "../../_components/InfoRow";
-import { LinkedParent } from "../../_components/LinkedParent";
 import { LinkParentModal } from "../../_components/LinkParentModal";
+import { createClient } from "@/utils/supabase/server";
+import {
+  allergyLabel,
+  avatarForIndex,
+  formatAgeYears,
+  formatBirthShort,
+  formatEnrollShort,
+  slugify,
+  type RoomVm,
+} from "../../_lib/kids";
 
-type ParentStatus = "activa" | "pendiente";
-
-type Parent = {
-  avatar: { letter: string; bg: string };
-  name: string;
-  relation: string;
-  statusLabel: string;
-  status: ParentStatus;
+type ChildRow = {
+  id: string;
+  full_name: string;
+  birth_date: string;
+  enrolled_at: string;
+  allergy_tags: string[];
+  medical_notes: string | null;
+  room_id: string;
 };
 
-type KidProfile = {
-  avatar: { letter: string; bg: string; color: string };
+type RoomRow = {
+  id: string;
   name: string;
-  ageRoom: string;
-  allergy: { title: string; text: string };
-  infoRows: { label: string; value: string }[];
-  parents: Parent[];
-};
-
-const MATEO: KidProfile = {
-  avatar: { letter: "M", bg: "#A9D9E8", color: "#1F7A93" },
-  name: "Mateo Fernández",
-  ageRoom: "3 años · Sala Soles",
-  allergy: {
-    title: "Alergias y notas",
-    text: "Alergia al maní. Evitar frutos secos. Lleva inhalador en la mochila.",
-  },
-  infoRows: [
-    { label: "Fecha de nacimiento", value: "12 mar 2022" },
-    { label: "Sala", value: "Soles" },
-    { label: "Ingreso", value: "feb 2025" },
-  ],
-  parents: [
-    {
-      avatar: { letter: "L", bg: "#C9B6E8" },
-      name: "Lucía Fernández",
-      relation: "Mamá · activa",
-      statusLabel: "ACTIVA",
-      status: "activa",
-    },
-    {
-      avatar: { letter: "D", bg: "#A9C7E8" },
-      name: "Diego Fernández",
-      relation: "Papá · invitación enviada",
-      statusLabel: "PENDIENTE",
-      status: "pendiente",
-    },
-  ],
+  created_at: string;
 };
 
 export default async function KidProfilePage({
@@ -60,8 +37,60 @@ export default async function KidProfilePage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  await params;
-  const kid = MATEO;
+  const { slug } = await params;
+  const supabase = createClient(await cookies());
+
+  const [{ data: rooms }, { data: children }] = await Promise.all([
+    supabase
+      .from("rooms")
+      .select("id, name, created_at")
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("children")
+      .select(
+        "id, full_name, birth_date, enrolled_at, allergy_tags, medical_notes, room_id",
+      )
+      .eq("status", "active")
+      .order("full_name", { ascending: true }),
+  ]);
+
+  const roomsVm: RoomVm[] = (rooms ?? []).map(
+    (r: RoomRow): RoomVm => ({ id: r.id, name: r.name }),
+  );
+
+  const childRows: ChildRow[] = (children ?? []) as ChildRow[];
+  const index = childRows.findIndex((c) => slugify(c.full_name) === slug);
+  if (index === -1) {
+    notFound();
+  }
+  const c = childRows[index];
+  const room = roomsVm.find((r) => r.id === c.room_id);
+
+  const avatar = {
+    letter: c.full_name.charAt(0).toUpperCase(),
+    ...avatarForIndex(index),
+  };
+  const ageRoom = `${formatAgeYears(c.birth_date)} · Sala ${
+    room?.name ?? ""
+  }`;
+
+  const tags = c.allergy_tags ?? [];
+  const notes = c.medical_notes?.trim() ?? "";
+  const allergyParts: string[] = [];
+  if (tags.length > 0) {
+    allergyParts.push(tags.map(allergyLabel).join(", "));
+  }
+  if (notes.length > 0) {
+    allergyParts.push(notes);
+  }
+  const allergyText =
+    allergyParts.length > 0 ? allergyParts.join(". ") : null;
+
+  const infoRows = [
+    { label: "Fecha de nacimiento", value: formatBirthShort(c.birth_date) },
+    { label: "Sala", value: room?.name ?? "" },
+    { label: "Ingreso", value: formatEnrollShort(c.enrolled_at) },
+  ];
 
   return (
     <div className="flex min-h-screen bg-app-bg">
@@ -93,16 +122,16 @@ export default async function KidProfilePage({
               <div className="flex items-center gap-[18px]">
                 <span
                   className="w-[84px] h-[84px] rounded-full shrink-0 flex items-center justify-center font-display font-semibold text-[34px]"
-                  style={{ background: kid.avatar.bg, color: kid.avatar.color }}
+                  style={{ background: avatar.bg, color: avatar.color }}
                 >
-                  {kid.avatar.letter}
+                  {avatar.letter}
                 </span>
                 <div className="flex-1">
                   <h1 className="font-display font-semibold text-[28px] m-0 text-ink">
-                    {kid.name}
+                    {c.full_name}
                   </h1>
                   <p className="m-[3px_0_0] text-ink-muted text-[15px]">
-                    {kid.ageRoom}
+                    {ageRoom}
                   </p>
                 </div>
                 <a
@@ -113,15 +142,17 @@ export default async function KidProfilePage({
                 </a>
               </div>
 
-              <AllergyBox title={kid.allergy.title} text={kid.allergy.text} />
+              {allergyText ? (
+                <AllergyBox title="Alergias y notas" text={allergyText} />
+              ) : null}
 
               <div className="bg-surface border border-border-cream rounded-2xl overflow-hidden">
-                {kid.infoRows.map((row, i) => (
+                {infoRows.map((row, i) => (
                   <InfoRow
                     key={row.label}
                     label={row.label}
                     value={row.value}
-                    last={i === kid.infoRows.length - 1}
+                    last={i === infoRows.length - 1}
                   />
                 ))}
               </div>
@@ -153,10 +184,10 @@ export default async function KidProfilePage({
                   PADRES VINCULADOS
                 </div>
                 <div className="flex flex-col gap-[14px]">
-                  {kid.parents.map((parent) => (
-                    <LinkedParent key={parent.name} {...parent} />
-                  ))}
-                  <LinkParentModal kidName={kid.name} />
+                  <p className="text-[14px] text-ink-muted">
+                    Aún no hay padres vinculados
+                  </p>
+                  <LinkParentModal kidName={c.full_name} />
                 </div>
               </div>
             </div>
