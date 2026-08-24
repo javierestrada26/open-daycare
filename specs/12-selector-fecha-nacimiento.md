@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 04, SPEC 11
 **Date:** 2026-08-24
 
@@ -49,16 +49,16 @@ Convención: mes en 1–12 (no 0–11 como `Date`). Hacia el formulario se emite
 
 ## Criterios de aceptación
 
-- [ ] El modal muestra tres selectores (día, mes, año) en lugar del input de texto.
-- [ ] Los meses se muestran con nombres en español (Enero…Diciembre).
-- [ ] El selector de año ofrece desde el año actual hasta 10 años atrás; no hay años futuros.
-- [ ] Al elegir febrero, el selector de día ofrece 28 días (29 en bisiesto, ej. 2024).
-- [ ] Con día 31 elegido, al cambiar a un mes de 30 días el día se ajusta a 30 (clamp); al cambiar a febrero de año no bisiesto se ajusta a 28.
-- [ ] Guardar con la fecha incompleta muestra error inline (`"Completá la fecha de nacimiento."`) y no llama al servidor.
-- [ ] Guardar con fecha válida crea el niño y cierra el modal; la lista se refresca (`revalidatePath`).
-- [ ] El servidor sigue rechazando fechas futuras con `"Revisá el nombre y la fecha de nacimiento."` (red de seguridad).
-- [ ] `npm run lint` y `npx tsc --noEmit` pasan sin errores; `npm run build` sin errores.
-- [ ] Cero DDL (no se tocan tablas, columnas, RLS, triggers ni migraciones).
+- [x] El modal muestra tres selectores (día, mes, año) en lugar del input de texto.
+- [x] Los meses se muestran con nombres en español (Enero…Diciembre).
+- [x] El selector de año ofrece desde el año actual hasta 10 años atrás; no hay años futuros.
+- [x] Al elegir febrero, el selector de día ofrece 28 días (29 en bisiesto, ej. 2024).
+- [x] Con día 31 elegido, al cambiar a un mes de 30 días el día se ajusta a 30 (clamp); al cambiar a febrero de año no bisiesto se ajusta a 28.
+- [x] Guardar con la fecha incompleta muestra error inline (`"Completá la fecha de nacimiento."`) y no llama al servidor.
+- [x] Guardar con fecha válida crea el niño y cierra el modal; la lista se refresca (`revalidatePath`).
+- [x] El servidor sigue rechazando fechas futuras con `"Revisá el nombre y la fecha de nacimiento."` (red de seguridad).
+- [x] `npm run lint` y `npx tsc --noEmit` pasan sin errores; `npm run build` sin errores.
+- [x] Cero DDL (no se tocan tablas, columnas, RLS, triggers ni migraciones).
 
 ## Decisiones tomadas y descartadas
 
