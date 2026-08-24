@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 02, SPEC 04, SPEC 09, SPEC 10
 **Date:** 2026-08-24
 
@@ -86,25 +86,25 @@ export async function createKid(input: {
 
 ## Criterios de aceptación
 
-- [ ] `/kids` muestra exactamente 3 secciones siempre visibles: "SALA SOLES · 0 niños", "SALA LUNAS · 0 niños", "SALA ESTRELLAS · 0 niños" (DB sin niños).
-- [ ] Cada sala vacía muestra el texto "Aún no hay niños en esta sala" en `--color-ink-muted`.
-- [ ] El `<select>` SALA del modal Agregar niño carga dinámicamente las 3 salas desde la DB, con Soles seleccionada por defecto.
-- [ ] "Guardar" con nombre + fecha `dd/mm/aaaa` válidos inserta una fila en `public.children` (`enrolled_at` = hoy, `photo_consent` = true, `status` = 'active') y la tarjeta aparece en su sala sin recargar manualmente (`revalidatePath`).
-- [ ] Alergias "Maní, Lactosa" se persisten como `{peanut,lactose}` y la tarjeta muestra badge MANÍ.
-- [ ] Niño sin alergias muestra badge VINCULAR; toda tarjeta dice "sin padres vinculados".
-- [ ] "Guardar" con nombre vacío o fecha inválida (ej. "31/02/2020") muestra error inline en `--color-primary-dark` y no inserta.
-- [ ] El botón "Guardar" muestra "Guardando…" y se deshabilita durante el submit.
-- [ ] El buscador filtra las tarjetas en vivo por nombre (case-insensitive) sin cambiar la URL.
-- [ ] `/kids` sigue siendo Server Component; `KidsBrowser` y `AddKidModal` son las únicas islas client.
-- [ ] `/kids/<slug-real>` muestra datos reales: avatar, nombre, "N años · Sala {Name}", `AllergyBox` (si hay datos), InfoRows (Fecha de nacimiento, Sala, Ingreso).
-- [ ] `/kids/<slug-inexistente>` devuelve 404 (`notFound()`).
-- [ ] Niño sin alergias ni notas médicas no renderiza `AllergyBox`.
-- [ ] PADRES VINCULADOS muestra "Aún no hay padres vinculados" + botón "Vincular otro padre" (visual, SPEC 05); sin rastro de Lucía/Diego.
-- [ ] "Editar" y "Resumen del día" siguen visible-no-funcionales.
-- [ ] El mock `KIDS` y el mock `MATEO` (con Lucía/Diego) se eliminan.
-- [ ] `npm run lint` sin errores; `npx tsc --noEmit` ok; `npm run build` sin errores.
-- [ ] `/`, `/login`, `/activate-account` funcionan sin regresiones.
-- [ ] Cero DDL (no se crean/modifican tablas, columnas, RLS, triggers, migraciones).
+- [x] `/kids` muestra exactamente 3 secciones siempre visibles: "SALA SOLES · 0 niños", "SALA LUNAS · 0 niños", "SALA ESTRELLAS · 0 niños" (DB sin niños).
+- [x] Cada sala vacía muestra el texto "Aún no hay niños en esta sala" en `--color-ink-muted`.
+- [x] El `<select>` SALA del modal Agregar niño carga dinámicamente las 3 salas desde la DB, con Soles seleccionada por defecto.
+- [x] "Guardar" con nombre + fecha `dd/mm/aaaa` válidos inserta una fila en `public.children` (`enrolled_at` = hoy, `photo_consent` = true, `status` = 'active') y la tarjeta aparece en su sala sin recargar manualmente (`revalidatePath`).
+- [x] Alergias "Maní, Lactosa" se persisten como `{peanut,lactose}` y la tarjeta muestra badge MANÍ.
+- [x] Niño sin alergias muestra badge VINCULAR; toda tarjeta dice "sin padres vinculados".
+- [x] "Guardar" con nombre vacío o fecha inválida (ej. "31/02/2020") muestra error inline en `--color-primary-dark` y no inserta.
+- [x] El botón "Guardar" muestra "Guardando…" y se deshabilita durante el submit.
+- [x] El buscador filtra las tarjetas en vivo por nombre (case-insensitive) sin cambiar la URL.
+- [x] `/kids` sigue siendo Server Component; `KidsBrowser` y `AddKidModal` son las únicas islas client.
+- [x] `/kids/<slug-real>` muestra datos reales: avatar, nombre, "N años · Sala {Name}", `AllergyBox` (si hay datos), InfoRows (Fecha de nacimiento, Sala, Ingreso).
+- [x] `/kids/<slug-inexistente>` devuelve 404 (`notFound()`).
+- [x] Niño sin alergias ni notas médicas no renderiza `AllergyBox`.
+- [x] PADRES VINCULADOS muestra "Aún no hay padres vinculados" + botón "Vincular otro padre" (visual, SPEC 05); sin rastro de Lucía/Diego.
+- [x] "Editar" y "Resumen del día" siguen visible-no-funcionales.
+- [x] El mock `KIDS` y el mock `MATEO` (con Lucía/Diego) se eliminan.
+- [x] `npm run lint` sin errores; `npx tsc --noEmit` ok; `npm run build` sin errores.
+- [x] `/`, `/login`, `/activate-account` funcionan sin regresiones.
+- [x] Cero DDL (no se crean/modifican tablas, columnas, RLS, triggers, migraciones).
 
 ## Decisiones tomadas y descartadas
 
