@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { Resend } from "resend";
@@ -129,4 +130,96 @@ export async function sendInvitation(input: {
   }
 
   return { code };
+}
+
+export async function activateAccount(input: {
+  code: string;
+  password: string;
+}): Promise<{ error?: string } | void> {
+  const code = input.code.trim();
+  const password = input.password;
+
+  if (code.length === 0 || password.length < 6) {
+    return { error: "La contraseña debe tener al menos 6 caracteres." };
+  }
+
+  const admin = createAdminClient();
+
+  const { data: invitation } = await admin
+    .from("invitations")
+    .select(
+      "id, child_id, full_name, email, relationship, status, expires_at, children (full_name, rooms (id, name, daycare_id))",
+    )
+    .eq("code", code)
+    .maybeSingle();
+
+  if (!invitation || invitation.status !== "pending") {
+    return { error: "Este link de invitación no es válido o ya fue usado." };
+  }
+
+  if (new Date(invitation.expires_at) < new Date()) {
+    await admin
+      .from("invitations")
+      .update({ status: "expired" })
+      .eq("id", invitation.id);
+    return { error: "Este link de invitación no es válido o ya fue usado." };
+  }
+
+  const child = invitation.children?.[0];
+  const room = child?.rooms?.[0];
+  const daycareId = room?.daycare_id;
+
+  if (!daycareId) {
+    return { error: "No se pudo activar la cuenta. Intentá de nuevo." };
+  }
+
+  const { data: authUser, error: createError } =
+    await admin.auth.admin.createUser({
+      email: invitation.email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        daycare_id: daycareId,
+        role: "parent",
+        full_name: invitation.full_name,
+      },
+    });
+
+  if (createError) {
+    const msg = (createError as { message?: string }).message ?? "";
+    if (msg.toLowerCase().includes("already")) {
+      return { error: "Ya existe una cuenta con este email." };
+    }
+    return { error: "No se pudo crear la cuenta. Intentá de nuevo." };
+  }
+
+  const { error: linkError } = await admin.from("parent_children").insert({
+    parent_id: authUser.user!.id,
+    child_id: invitation.child_id,
+    relationship: invitation.relationship,
+  });
+
+  if (linkError) {
+    await admin.auth.admin.deleteUser(authUser.user!.id);
+    return { error: "No se pudo vincular la cuenta. Intentá de nuevo." };
+  }
+
+  await admin
+    .from("invitations")
+    .update({ status: "accepted", accepted_at: new Date().toISOString() })
+    .eq("id", invitation.id);
+
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: invitation.email,
+    password,
+  });
+
+  if (signInError) {
+    redirect("/login");
+  }
+
+  redirect("/");
 }
