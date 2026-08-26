@@ -41,6 +41,7 @@ Subagentes especializados en `.opencode/agents/`. Invócalos con `@<nombre> <arg
 
 - **@accessibility-checker** `[file path]`: analiza y corrige problemas de accesibilidad WCAG 2.2 AA en archivos web (.tsx, .jsx, .html, .svg, .css). Revisa atributos ARIA, HTML semántico, contraste, focus indicators y más.
 - **@db-migrator** `[tabla o sección]`: genera, verifica y aplica migraciones de base de datos. Compara el schema de referencia (`../07-DB-Schema/`) contra la DB real, crea migraciones faltantes en `supabase/migrations/`, y las aplica con `npx supabase db push`.
+- **@db-security-auditor** `[tabla o área]`: audita y corrige problemas de seguridad en la base de datos Supabase. Previene fuga de datos entre niños y padres por RLS mal configurado, audita SECURITY DEFINER functions, permisos, views, columnas sensibles y JWT claims. Genera migraciones de corrección.
 - **@react-best-practices** `[file/folder] [--dry-run]`: aplica mejores prácticas de React a archivos .tsx/.jsx. Usa Context7 para verificar documentación actual. Analiza hooks, TypeScript y performance. Soporta modo `--dry-run` para solo revisar sin modificar.
 - **@spec-verifier** `<NN-slug>`: verifica, corrige y marca los criterios de aceptación de un spec implementado. Usa Context7 para validar patrones Next.js/React/Tailwind, y Playwright con visión para comparar pantallas contra las referencias. Edita el `.md` del spec in-place.
 
