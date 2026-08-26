@@ -38,7 +38,7 @@ CREATE POLICY "Parents can view photos of their children's posts"
       JOIN posts p ON pp.post_id = p.id
       JOIN post_children pc ON p.id = pc.post_id
       JOIN parent_children pc_rel ON pc.child_id = pc_rel.child_id
-      WHERE pp.url = storage.foldername(name)[2]
+      WHERE pp.url = (storage.foldername(name))[2]
       AND pc_rel.parent_id = auth.uid()
     )
   );

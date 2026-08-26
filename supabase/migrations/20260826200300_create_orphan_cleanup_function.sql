@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pg_cron SCHEMA extensions;
+
 CREATE OR REPLACE FUNCTION cleanup_orphaned_photos()
 RETURNS integer
 LANGUAGE plpgsql
@@ -25,5 +27,9 @@ BEGIN
   RETURN deleted_count;
 END;
 $$;
+
+REVOKE ALL ON FUNCTION public.cleanup_orphaned_photos() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.cleanup_orphaned_photos() FROM anon;
+REVOKE ALL ON FUNCTION public.cleanup_orphaned_photos() FROM authenticated;
 
 SELECT cron.schedule('cleanup-orphaned-photos', '0 3 * * *', 'SELECT public.cleanup_orphaned_photos()');
