@@ -148,7 +148,7 @@ export async function activateAccount(input: {
   const { data: invitation } = await admin
     .from("invitations")
     .select(
-      "id, child_id, full_name, email, relationship, status, expires_at, children (full_name, rooms (id, name, daycare_id))",
+      "id, child_id, full_name, email, relationship, status, expires_at",
     )
     .eq("code", code)
     .maybeSingle();
@@ -165,8 +165,18 @@ export async function activateAccount(input: {
     return { error: "Este link de invitación no es válido o ya fue usado." };
   }
 
-  const child = invitation.children?.[0];
-  const room = child?.rooms?.[0];
+  const { data: child } = await admin
+    .from("children")
+    .select("room_id")
+    .eq("id", invitation.child_id)
+    .maybeSingle();
+
+  const { data: room } = await admin
+    .from("rooms")
+    .select("daycare_id")
+    .eq("id", child?.room_id)
+    .maybeSingle();
+
   const daycareId = room?.daycare_id;
 
   if (!daycareId) {

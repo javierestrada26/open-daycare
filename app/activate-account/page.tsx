@@ -19,9 +19,7 @@ export default async function ActivateAccountPage({
     const admin = createAdminClient();
     const { data: invitation } = await admin
       .from("invitations")
-      .select(
-        "email, status, expires_at, children (full_name, rooms (name))",
-      )
+      .select("email, status, expires_at, child_id")
       .eq("code", code)
       .maybeSingle();
 
@@ -30,11 +28,22 @@ export default async function ActivateAccountPage({
       invitation.status === "pending" &&
       new Date(invitation.expires_at) >= new Date()
     ) {
+      const { data: child } = await admin
+        .from("children")
+        .select("full_name, room_id")
+        .eq("id", invitation.child_id)
+        .maybeSingle();
+
+      const { data: room } = await admin
+        .from("rooms")
+        .select("name")
+        .eq("id", child?.room_id)
+        .maybeSingle();
+
       valid = true;
       email = invitation.email;
-      const child = invitation.children?.[0];
       childName = child?.full_name ?? "";
-      roomName = child?.rooms?.[0]?.name ?? "";
+      roomName = room?.name ?? "";
     }
   }
 
