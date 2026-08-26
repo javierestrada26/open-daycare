@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Recipient = "Mateo" | "Sofía" | "Benjamín" | "Toda la sala";
 
@@ -46,7 +46,16 @@ export function NewPostModal() {
     setForm(EMPTY_FORM);
   }, []);
 
-  // ESC closes the modal while it is open.
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      close();
+    },
+    [close],
+  );
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -56,11 +65,48 @@ export function NewPostModal() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, close]);
 
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !dialogRef.current) return;
+    const dialog = dialogRef.current;
+    const focusable = dialog.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
+    const trap = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    dialog.addEventListener("keydown", trap);
+    return () => dialog.removeEventListener("keydown", trap);
+  }, [open]);
+
   return (
     <>
       <button
         type="button"
         onClick={() => setOpen(true)}
+        aria-label="Abrir nueva publicación"
         className="flex items-center justify-center gap-2 w-full p-3 rounded-[14px] text-white font-extrabold text-[14.5px] mb-[18px] bg-[linear-gradient(180deg,var(--color-primary-gradient-from),var(--color-primary-gradient-to))] shadow-[0_8px_18px_-8px_rgba(238,129,100,0.75)]"
       >
         <svg
@@ -83,8 +129,13 @@ export function NewPostModal() {
           className="fixed inset-0 z-50 flex items-start justify-center p-[40px_24px]"
           style={{ background: "var(--color-modal-overlay)" }}
           onClick={close}
+          aria-hidden="true"
         >
           <div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="new-post-title"
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-[580px] bg-auth-bg border border-border-cream rounded-[24px] shadow-[0_20px_50px_-24px_rgba(63,54,46,0.35)] overflow-hidden"
           >
@@ -96,18 +147,19 @@ export function NewPostModal() {
               >
                 Cancelar
               </button>
-              <span className="font-display text-[18px] font-semibold text-ink">
+              <span id="new-post-title" className="font-display text-[18px] font-semibold text-ink">
                 Nueva publicación
               </span>
               <button
-                type="button"
-                onClick={close}
-                className="text-primary text-[15px] font-extrabold"
+                type="submit"
+                form="new-post-form"
+                className="text-primary text-[15px] font-extrabold cursor-pointer bg-transparent border-none p-0"
               >
                 Publicar
               </button>
             </div>
 
+            <form id="new-post-form" onSubmit={handleSubmit}>
             <div className="px-[26px] py-6">
               <div className="text-[12px] font-extrabold tracking-[0.7px] text-ink-muted mb-[10px]">
                 PARA
@@ -213,6 +265,7 @@ export function NewPostModal() {
                 </div>
               </div>
             </div>
+            </form>
           </div>
         </div>
       )}

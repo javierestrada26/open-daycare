@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { memo, type ReactNode } from "react";
+import Image from "next/image";
 
 export type BadgeKind = "logro" | "actividad" | "anuncio";
 
@@ -65,7 +66,7 @@ const CommentIcon = () => (
   </svg>
 );
 
-export function FeedPost({
+export const FeedPost = memo(function FeedPost({
   avatar,
   name,
   time,
@@ -118,7 +119,8 @@ export function FeedPost({
       <p className="text-[15.5px] leading-[1.55] text-ink-body m-0">{text}</p>
 
       {photo?.type === "placeholder" ? (
-        <a
+        <div
+          role="button"
           tabIndex={0}
           className="flex flex-col items-center justify-center gap-2 mt-[14px] border-[1.5px] border-dashed rounded-[16px] bg-[#F4ECE1] h-[200px] text-ink-placeholder"
           style={{ borderColor: "#DBCDBA" }}
@@ -138,7 +140,15 @@ export function FeedPost({
             <path d="m21 15-3.6-3.6a2 2 0 0 0-2.8 0L6 21" />
           </svg>
           <span className="text-[13.5px]">{photo.caption}</span>
-        </a>
+        </div>
+      ) : photo?.type === "image" ? (
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          width={600}
+          height={300}
+          className="mt-[14px] rounded-[16px] w-full object-cover max-h-[300px]"
+        />
       ) : null}
 
       <footer className="flex items-center gap-[18px] mt-4 pt-[14px] border-t border-divider">
@@ -146,21 +156,21 @@ export function FeedPost({
           <HeartIcon />
           {likes}
         </span>
-        <a
-          tabIndex={0}
-          className="flex items-center gap-[7px] text-ink-muted font-bold text-sm"
+        <button
+          type="button"
+          className="flex items-center gap-[7px] text-ink-muted font-bold text-sm cursor-pointer bg-transparent border-none p-0"
         >
           <CommentIcon />
           {comments}
-        </a>
+        </button>
         <span className="flex-1" />
-        <a
-          tabIndex={0}
-          className="text-primary-dark font-extrabold text-sm"
+        <button
+          type="button"
+          className="text-primary-dark font-extrabold text-sm cursor-pointer bg-transparent border-none p-0"
         >
           Editar
-        </a>
+        </button>
       </footer>
     </article>
   );
-}
+});
