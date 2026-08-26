@@ -1,7 +1,9 @@
-import { memo, type ReactNode } from "react";
+"use client";
+
+import { memo, useState, type ReactNode } from "react";
 import Image from "next/image";
 
-export type BadgeKind = "logro" | "actividad" | "anuncio";
+export type BadgeKind = "comida" | "siesta" | "actividad" | "logro" | "animo" | "foto" | "anuncio";
 
 export type FeedPostProps = {
   avatar: { letter: string; bg: string; color: string };
@@ -10,11 +12,10 @@ export type FeedPostProps = {
   badge: { kind: BadgeKind; label: string };
   audience: string;
   text: string;
-  photo?:
-    | { type: "placeholder"; caption: string }
-    | { type: "image"; src: string; alt: string };
-  likes: number;
-  comments: number;
+  photos?: Array<{ url: string; alt: string }>;
+  postId?: string;
+  likes?: number;
+  comments?: number;
   avatarIcon?: ReactNode;
 };
 
@@ -22,13 +23,29 @@ const BADGE_STYLES: Record<
   BadgeKind,
   { bg: string; color: string; className?: string }
 > = {
-  logro: {
-    bg: "#CFEBD8",
-    color: "#3E9B6C",
+  comida: {
+    bg: "#F5E6D3",
+    color: "#C4884F",
+  },
+  siesta: {
+    bg: "#E8E0F0",
+    color: "#8B6BAE",
   },
   actividad: {
     bg: "#C7E7F1",
     color: "#2E89A6",
+  },
+  logro: {
+    bg: "#CFEBD8",
+    color: "#3E9B6C",
+  },
+  animo: {
+    bg: "#FFF3CD",
+    color: "#D4A017",
+  },
+  foto: {
+    bg: "#E8F4F8",
+    color: "#5B9BD5",
   },
   anuncio: {
     bg: "#CCD8F4",
@@ -66,6 +83,182 @@ const CommentIcon = () => (
   </svg>
 );
 
+function PhotoGallery({ photos }: { photos: Array<{ url: string; alt: string }> }) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const openLightbox = (index: number) => {
+    setCurrentIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => setLightboxOpen(false);
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1));
+  };
+
+  if (photos.length === 0) return null;
+
+  if (photos.length === 1) {
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => openLightbox(0)}
+          className="mt-[14px] w-full rounded-[16px] overflow-hidden cursor-pointer border-none p-0 bg-transparent"
+        >
+          <Image
+            src={photos[0].url}
+            alt={photos[0].alt}
+            width={600}
+            height={300}
+            className="w-full object-cover max-h-[300px]"
+          />
+        </button>
+        {lightboxOpen && (
+          <Lightbox
+            photos={photos}
+            currentIndex={currentIndex}
+            onClose={closeLightbox}
+            onPrevious={goToPrevious}
+            onNext={goToNext}
+          />
+        )}
+      </>
+    );
+  }
+
+  const displayPhotos = photos.slice(0, 4);
+  const remaining = photos.length - 4;
+
+  return (
+    <>
+      <div className="mt-[14px] grid grid-cols-2 gap-2 rounded-[16px] overflow-hidden">
+        {displayPhotos.map((photo, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => openLightbox(index)}
+            className="relative aspect-square cursor-pointer border-none p-0 bg-transparent overflow-hidden"
+          >
+            <Image
+              src={photo.url}
+              alt={photo.alt}
+              fill
+              className="object-cover"
+            />
+            {index === 3 && remaining > 0 && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white font-bold text-lg">
+                +{remaining} más
+              </div>
+            )}
+          </button>
+        ))}
+      </div>
+      {lightboxOpen && (
+        <Lightbox
+          photos={photos}
+          currentIndex={currentIndex}
+          onClose={closeLightbox}
+          onPrevious={goToPrevious}
+          onNext={goToNext}
+        />
+      )}
+    </>
+  );
+}
+
+function Lightbox({
+  photos,
+  currentIndex,
+  onClose,
+  onPrevious,
+  onNext,
+}: {
+  photos: Array<{ url: string; alt: string }>;
+  currentIndex: number;
+  onClose: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90"
+      onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onClose();
+        if (e.key === "ArrowLeft") onPrevious();
+        if (e.key === "ArrowRight") onNext();
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Galería de fotos"
+    >
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute top-4 right-4 text-white text-3xl font-bold hover:text-gray-300 bg-transparent border-none cursor-pointer z-10"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+      
+      {photos.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPrevious();
+            }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl font-bold hover:text-gray-300 bg-transparent border-none cursor-pointer z-10"
+            aria-label="Anterior"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onNext();
+            }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl font-bold hover:text-gray-300 bg-transparent border-none cursor-pointer z-10"
+            aria-label="Siguiente"
+          >
+            ›
+          </button>
+        </>
+      )}
+
+      <div
+        className="relative max-w-[90vw] max-h-[90vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Image
+          src={photos[currentIndex].url}
+          alt={photos[currentIndex].alt}
+          width={800}
+          height={600}
+          className="max-w-[90vw] max-h-[90vh] object-contain"
+        />
+        {photos.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm bg-black/60 px-3 py-1 rounded-full">
+            {currentIndex + 1} / {photos.length}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export const FeedPost = memo(function FeedPost({
   avatar,
   name,
@@ -73,9 +266,9 @@ export const FeedPost = memo(function FeedPost({
   badge,
   audience,
   text,
-  photo,
-  likes,
-  comments,
+  photos,
+  likes = 0,
+  comments = 0,
   avatarIcon,
 }: FeedPostProps) {
   const badgeStyle = BADGE_STYLES[badge.kind];
@@ -118,38 +311,7 @@ export const FeedPost = memo(function FeedPost({
 
       <p className="text-[15.5px] leading-[1.55] text-ink-body m-0">{text}</p>
 
-      {photo?.type === "placeholder" ? (
-        <div
-          role="button"
-          tabIndex={0}
-          className="flex flex-col items-center justify-center gap-2 mt-[14px] border-[1.5px] border-dashed rounded-[16px] bg-[#F4ECE1] h-[200px] text-ink-placeholder"
-          style={{ borderColor: "#DBCDBA" }}
-        >
-          <svg
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="2" />
-            <circle cx="9" cy="9" r="2" />
-            <path d="m21 15-3.6-3.6a2 2 0 0 0-2.8 0L6 21" />
-          </svg>
-          <span className="text-[13.5px]">{photo.caption}</span>
-        </div>
-      ) : photo?.type === "image" ? (
-        <Image
-          src={photo.src}
-          alt={photo.alt}
-          width={600}
-          height={300}
-          className="mt-[14px] rounded-[16px] w-full object-cover max-h-[300px]"
-        />
-      ) : null}
+      {photos && photos.length > 0 && <PhotoGallery photos={photos} />}
 
       <footer className="flex items-center gap-[18px] mt-4 pt-[14px] border-t border-divider">
         <span className="flex items-center gap-[7px] text-primary-accent font-bold text-sm">
