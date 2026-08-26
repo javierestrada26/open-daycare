@@ -187,7 +187,7 @@ export default async function KidProfilePage({
                   <p className="text-[14px] text-ink-muted">
                     Aún no hay padres vinculados
                   </p>
-                  <LinkParentModal kidName={c.full_name} />
+                  <LinkParentModal kidName={c.full_name} childId={c.id} />
                 </div>
               </div>
             </div>
