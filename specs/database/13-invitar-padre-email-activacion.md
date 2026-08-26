@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 03, SPEC 05, SPEC 08, SPEC 09, SPEC 10
 **Date:** 2026-08-25
 
@@ -163,28 +163,28 @@ Estado del modal: `type SendState = "idle" | "sending" | "success" | "error"` + 
 
 ## Criterios de aceptación
 
-- [ ] Existe la migración versionada con enums + 2 tablas + índices + función + 3 policies, aplicada con `npx supabase db push`.
-- [ ] `supabase list_tables` muestra `invitations` (11 columnas) y `parent_children` (5 columnas) con los tipos del doc de referencia §5-§6.
-- [ ] RLS `enable` + `force` en ambas tablas; exactamente 3 policies (`invitations_select_staff_same_daycare`, `invitations_insert_staff_same_daycare`, `parent_children_select_staff_or_self`); sin policies `update`/`delete`.
-- [ ] `current_user_role()` existe, es `security definer`, revoke de `public`/`anon`, grant a `authenticated`.
-- [ ] `get_advisors` (security + performance) sin warnings nuevos sobre estas tablas.
-- [ ] `resend` instalado; las 4 env vars (`RESEND_API_KEY`, `RESEND_FROM`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_APP_URL`) están definidas en `.env.local` y `.env` con los mismos valores, y documentadas en `.env.template`.
-- [ ] `utils/supabase/admin.ts` no es importado por ningún archivo `'use client'`.
-- [ ] En el modal, la caja de código pre-envío NO muestra un código falso (muestra "Se genera al enviar la invitación").
-- [ ] "Enviar invitación" con nombre/email válidos crea la invitación `pending` con código de 5 chars del alfabeto definido y `expires_at` a 7 días, envía el email real vía Resend y muestra el panel success con el mismo código.
-- [ ] El email recibido contiene el código visible y un botón que abre `/activate-account?code=XXXXX`.
-- [ ] Si Resend falla, no queda fila `pending` huérfana y el modal muestra el error.
-- [ ] Segunda invitación `pending` al mismo `(child_id, email)` → error "Ya hay una invitación pendiente para este email".
-- [ ] Un usuario sin rol `staff` no puede insertar invitaciones (RLS lo rechaza).
-- [ ] `/activate-account?code=<válido>` (incógnito) muestra nombre real del niño y sala; código y email read-only pre-llenados.
-- [ ] `/activate-account` sin code, o con code inexistente/expirado/ya aceptado → tarjeta de error con link a `/login`.
-- [ ] Activación exitosa: existe el usuario en `auth.users` (confirmado), su perfil en `public.users` con `role='parent'` y `full_name` de la invitación, la fila en `parent_children` con el relationship correcto, la invitación en `accepted` con `accepted_at`, y el padre queda con sesión en `/`.
-- [ ] Código expirado: la invitación queda en `expired` y el padre ve la tarjeta de error.
-- [ ] Email ya registrado → error "Ya existe una cuenta con este email." sin crear vínculo.
-- [ ] Tras la activación, logout + login del padre con su contraseña funciona (SPEC 09).
-- [ ] El checkbox de consentimiento togla en UI pero no escribe en la DB.
-- [ ] La columna PADRES VINCULADOS de `/kids/[slug]` sigue igual ("Aún no hay padres vinculados").
-- [ ] `npm run lint`, `npx tsc --noEmit` y `npm run build` pasan; `/`, `/kids`, `/login` sin regresiones.
+- [x] Existe la migración versionada con enums + 2 tablas + índices + función + 3 policies, aplicada con `npx supabase db push`.
+- [x] `supabase list_tables` muestra `invitations` (11 columnas) y `parent_children` (5 columnas) con los tipos del doc de referencia §5-§6.
+- [x] RLS `enable` + `force` en ambas tablas; exactamente 3 policies (`invitations_select_staff_same_daycare`, `invitations_insert_staff_same_daycare`, `parent_children_select_staff_or_self`); sin policies `update`/`delete`.
+- [x] `current_user_role()` existe, es `security definer`, revoke de `public`/`anon`, grant a `authenticated`.
+- [x] `get_advisors` (security + performance) sin warnings nuevos sobre estas tablas.
+- [x] `resend` instalado; las 4 env vars (`RESEND_API_KEY`, `RESEND_FROM`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_APP_URL`) están definidas en `.env.local` y `.env` con los mismos valores, y documentadas en `.env.template`.
+- [x] `utils/supabase/admin.ts` no es importado por ningún archivo `'use client'`.
+- [x] En el modal, la caja de código pre-envío NO muestra un código falso (muestra "Se genera al enviar la invitación").
+- [x] "Enviar invitación" con nombre/email válidos crea la invitación `pending` con código de 5 chars del alfabeto definido y `expires_at` a 7 días, envía el email real vía Resend y muestra el panel success con el mismo código.
+- [x] El email recibido contiene el código visible y un botón que abre `/activate-account?code=XXXXX`.
+- [x] Si Resend falla, no queda fila `pending` huérfana y el modal muestra el error.
+- [x] Segunda invitación `pending` al mismo `(child_id, email)` → error "Ya hay una invitación pendiente para este email".
+- [x] Un usuario sin rol `staff` no puede insertar invitaciones (RLS lo rechaza).
+- [x] `/activate-account?code=<válido>` (incógnito) muestra nombre real del niño y sala; código y email read-only pre-llenados.
+- [x] `/activate-account` sin code, o con code inexistente/expirado/ya aceptado → tarjeta de error con link a `/login`.
+- [x] Activación exitosa: existe el usuario en `auth.users` (confirmado), su perfil en `public.users` con `role='parent'` y `full_name` de la invitación, la fila en `parent_children` con el relationship correcto, la invitación en `accepted` con `accepted_at`, y el padre queda con sesión en `/`.
+- [x] Código expirado: la invitación queda en `expired` y el padre ve la tarjeta de error.
+- [x] Email ya registrado → error "Ya existe una cuenta con este email." sin crear vínculo.
+- [x] Tras la activación, logout + login del padre con su contraseña funciona (SPEC 09).
+- [x] El checkbox de consentimiento togla en UI pero no escribe en la DB.
+- [x] La columna PADRES VINCULADOS de `/kids/[slug]` sigue igual ("Aún no hay padres vinculados").
+- [x] `npm run lint`, `npx tsc --noEmit` y `npm run build` pasan; `/`, `/kids`, `/login` sin regresiones.
 
 ## Decisiones tomadas y descartadas
 
