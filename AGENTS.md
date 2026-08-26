@@ -35,6 +35,16 @@ Locked in `skills-lock.json`. Load the relevant skill before working in its doma
 - **supabase**: load for ANY task involving Supabase — products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues), SSR integrations (`supabase-js`, `@supabase/ssr`), auth/sessions/RLS, schema changes, migrations, and debugging errors or logs.
 - **supabase-postgres-best-practices**: load BEFORE creating or altering tables/columns, schema design, migrations, RLS policies and tests, indexes, triggers, DB functions, queues (`pg_cron`/`pgmq`), vector search (`pgvector`), or diagnosing slow queries, timeouts, locking, bloat, and connection issues.
 
+## Agents
+
+Subagentes especializados en `.opencode/agents/`. Invócalos con `@<nombre> <argumento>`.
+
+- **@accessibility-checker** `[file path]`: analiza y corrige problemas de accesibilidad WCAG 2.2 AA en archivos web (.tsx, .jsx, .html, .svg, .css). Revisa atributos ARIA, HTML semántico, contraste, focus indicators y más.
+- **@db-migrator** `[tabla o sección]`: genera, verifica y aplica migraciones de base de datos. Compara el schema de referencia (`../07-DB-Schema/`) contra la DB real, crea migraciones faltantes en `supabase/migrations/`, y las aplica con `npx supabase db push`.
+- **@db-security-auditor** `[tabla o área]`: audita y corrige problemas de seguridad en la base de datos Supabase. Previene fuga de datos entre niños y padres por RLS mal configurado, audita SECURITY DEFINER functions, permisos, views, columnas sensibles y JWT claims. Genera migraciones de corrección.
+- **@react-best-practices** `[file/folder] [--dry-run]`: aplica mejores prácticas de React a archivos .tsx/.jsx. Usa Context7 para verificar documentación actual. Analiza hooks, TypeScript y performance. Soporta modo `--dry-run` para solo revisar sin modificar.
+- **@spec-verifier** `<NN-slug>`: verifica, corrige y marca los criterios de aceptación de un spec implementado. Usa Context7 para validar patrones Next.js/React/Tailwind, y Playwright con visión para comparar pantallas contra las referencias. Edita el `.md` del spec in-place.
+
 ## Clientes de Supabase en la app
 
 La app se conecta a Supabase a través de los paquetes `@supabase/supabase-js` y `@supabase/ssr` (helpers en `utils/supabase/`). Siempre use estos helpers — no instancie clientes Supabase a mano.
