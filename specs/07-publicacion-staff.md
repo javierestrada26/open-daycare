@@ -1,4 +1,4 @@
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 06, DB Schema
 **Date:** 2026-08-26
 
@@ -461,44 +461,44 @@ CREATE POLICY "Users can insert their own preferences"
 
 ## Criterios de aceptación
 
-- [ ] Staff con una sola sala: no se muestra selector de sala.
-- [ ] Staff con múltiples salas: se muestra selector de sala con última usada como default (desde `user_preferences`).
-- [ ] Pills PARA muestran niños dinámicos de la sala seleccionada (no hardcodeados).
-- [ ] Pills PARA permiten multi-select (clic en niño lo agrega/quita).
-- [ ] Pill "Toda la sala" selecciona/deselecciona todos los niños.
-- [ ] Default PARA: "Toda la sala" (todos los niños seleccionados).
-- [ ] Default TIPO: "Actividad".
-- [ ] Sección FOTOS permite subir hasta 5 imágenes (jpeg/png/webp).
-- [ ] Al seleccionar imagen, se convierte a webp con `browser-image-compression`.
-- [ ] Al seleccionar imagen, se sube inmediatamente al bucket en `temp/` con preview.
-- [ ] Preview muestra la imagen en 96x96 con opción de remover.
-- [ ] Si la subida falla, se muestra error en el preview.
-- [ ] Descripción es obligatoria (validación client + server).
-- [ ] Al hacer clic en "Publicar":
+- [x] Staff con una sola sala: no se muestra selector de sala.
+- [x] Staff con múltiples salas: se muestra selector de sala con última usada como default (desde `user_preferences`).
+- [x] Pills PARA muestran niños dinámicos de la sala seleccionada (no hardcodeados).
+- [x] Pills PARA permiten multi-select (clic en niño lo agrega/quita).
+- [x] Pill "Toda la sala" selecciona/deselecciona todos los niños.
+- [x] Default PARA: "Toda la sala" (todos los niños seleccionados).
+- [x] Default TIPO: "Actividad".
+- [x] Sección FOTOS permite subir hasta 5 imágenes (jpeg/png/webp).
+- [x] Al seleccionar imagen, se convierte a webp con `browser-image-compression`.
+- [x] Al seleccionar imagen, se sube inmediatamente al bucket en `temp/` con preview.
+- [x] Preview muestra la imagen en 96x96 con opción de remover.
+- [x] Si la subida falla, se muestra error en el preview.
+- [x] Descripción es obligatoria (validación client + server).
+- [x] Al hacer clic en "Publicar":
   - Se crea el post en DB con author_id, room_id, type, body, published_at.
   - Se insertan post_children con niños seleccionados (o todos si "Toda la sala").
   - Se mueven fotos de `temp/` a `{post_id}/` en Storage.
   - Se insertan post_photos con URLs finales.
   - Se actualiza `user_preferences.last_room_id`.
   - Se llama `revalidatePath("/")`.
-- [ ] Después de publicar, el modal se cierra y el feed se actualiza inmediatamente.
-- [ ] Se muestra toast de éxito ("Publicación creada") al publicar.
-- [ ] Si falla la creación, se muestra toast de error (auto-dismiss 5s).
-- [ ] Si el usuario cancela el modal con fotos subidas, se muestra confirmación "¿Descartar cambios?".
-- [ ] Si confirma descarte, se eliminan las imágenes huérfanas de Storage.
-- [ ] Feed muestra posts reales desde DB (no mock).
-- [ ] Staff ve posts de sus salas asignadas.
-- [ ] Padres ven posts de sus hijos + anuncios de su sala.
-- [ ] URLs de fotos son firmadas con expiración de 1 hora.
-- [ ] RLS previene que staff cree posts en salas no asignadas.
-- [ ] RLS previene que padres vean posts de otros niños.
-- [ ] Posts con 1 foto: mostrar imagen completa.
-- [ ] Posts con 2-4 fotos: mostrar grid 2x2 (o 1+2 para 3 fotos).
-- [ ] Posts con >4 fotos: mostrar primeras 4 con indicador "+X más" que abre lightbox.
-- [ ] Lightbox permite navegar con flechas, cerrar con ESC o clic en backdrop.
-- [ ] Job de limpieza pg_cron elimina archivos en `temp/` con más de 24 horas.
-- [ ] `npm run lint` pasa sin errores.
-- [ ] `npx tsc --noEmit` no reporta tipos.
+- [x] Después de publicar, el modal se cierra y el feed se actualiza inmediatamente.
+- [x] Se muestra toast de éxito ("Publicación creada") al publicar.
+- [x] Si falla la creación, se muestra toast de error (auto-dismiss 5s).
+- [x] Si el usuario cancela el modal con fotos subidas, se muestra confirmación "¿Descartar cambios?".
+- [x] Si confirma descarte, se eliminan las imágenes huérfanas de Storage.
+- [x] Feed muestra posts reales desde DB (no mock).
+- [x] Staff ve posts de sus salas asignadas.
+- [x] Padres ven posts de sus hijos + anuncios de su sala.
+- [x] URLs de fotos son firmadas con expiración de 1 hora.
+- [x] RLS previene que staff cree posts en salas no asignadas.
+- [x] RLS previene que padres vean posts de otros niños.
+- [x] Posts con 1 foto: mostrar imagen completa.
+- [x] Posts con 2-4 fotos: mostrar grid 2x2 (o 1+2 para 3 fotos).
+- [x] Posts con >4 fotos: mostrar primeras 4 con indicador "+X más" que abre lightbox.
+- [x] Lightbox permite navegar con flechas, cerrar con ESC o clic en backdrop.
+- [x] Job de limpieza pg_cron elimina archivos en `temp/` con más de 24 horas.
+- [x] `npm run lint` pasa sin errores.
+- [x] `npx tsc --noEmit` no reporta tipos.
 
 ## Decisiones tomadas y descartadas
 
