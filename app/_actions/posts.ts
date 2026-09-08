@@ -135,7 +135,7 @@ export async function createPost(formData: FormData): Promise<{ success?: boolea
   return { success: true, postId: post.id };
 }
 
-export async function uploadPostPhoto(file: File): Promise<{ success?: boolean; url?: string; path?: string; error?: string }> {
+export async function uploadPostPhoto(formData: FormData): Promise<{ success?: boolean; url?: string; path?: string; error?: string }> {
   const supabase = createClient(await cookies());
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -153,6 +153,11 @@ export async function uploadPostPhoto(file: File): Promise<{ success?: boolean; 
   if (!userData || userData.role !== "staff") {
     console.error("uploadPostPhoto: User is not staff", userData);
     return { success: false, error: "No autorizado" };
+  }
+
+  const file = formData.get("file") as File;
+  if (!file) {
+    return { success: false, error: "No se proporcionó archivo" };
   }
 
   if (file.size > MAX_FILE_SIZE) {

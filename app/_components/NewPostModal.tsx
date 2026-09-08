@@ -124,7 +124,11 @@ export function NewPostModal() {
         };
 
         const compressedFile = await imageCompression(file, options);
-        const result = await uploadPostPhoto(compressedFile);
+        
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", compressedFile, compressedFile.name || "photo.webp");
+        
+        const result = await uploadPostPhoto(uploadFormData);
 
         if (result.success && result.path) {
           setPhotos((prev) =>
