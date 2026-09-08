@@ -141,6 +141,7 @@ export async function uploadPostPhoto(file: File): Promise<{ success?: boolean; 
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
+    console.error("uploadPostPhoto: No user");
     return { success: false, error: "No autorizado" };
   }
 
@@ -151,6 +152,7 @@ export async function uploadPostPhoto(file: File): Promise<{ success?: boolean; 
     .single();
 
   if (!userData || userData.role !== "staff") {
+    console.error("uploadPostPhoto: User is not staff", userData);
     return { success: false, error: "No autorizado" };
   }
 
@@ -186,6 +188,7 @@ export async function uploadPostPhoto(file: File): Promise<{ success?: boolean; 
       });
 
     if (uploadError) {
+      console.error("uploadPostPhoto: Upload error", uploadError);
       return { success: false, error: uploadError.message };
     }
 
@@ -194,6 +197,7 @@ export async function uploadPostPhoto(file: File): Promise<{ success?: boolean; 
     return { success: true, url: urlData.publicUrl, path: storagePath };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Error al procesar imagen";
+    console.error("uploadPostPhoto: Exception", err);
     return { success: false, error: message };
   }
 }

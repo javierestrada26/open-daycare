@@ -41,17 +41,17 @@ async function getFeedPosts(): Promise<FeedPostProps[]> {
       type,
       body,
       published_at,
-      author:users!author_id (
+      author:users!posts_author_id_fkey (
         id,
         full_name,
         avatar_url
       ),
-      room:rooms (
+      room:rooms!posts_room_id_fkey (
         id,
         name
       ),
       post_children (
-        child:children (
+        child:children!post_children_child_id_fkey (
           id,
           full_name
         )
@@ -65,10 +65,14 @@ async function getFeedPosts(): Promise<FeedPostProps[]> {
     .order("published_at", { ascending: false });
 
   if (userData.role === "staff") {
-    const { data: staffRooms } = await supabase
+    const { data: staffRooms, error: roomsError } = await supabase
       .from("staff_rooms")
       .select("room_id")
       .eq("staff_id", user.id);
+
+    if (roomsError) {
+      console.error("Error fetching staff rooms:", roomsError);
+    }
 
     const roomIds = staffRooms?.map((sr) => sr.room_id) || [];
     if (roomIds.length > 0) {
@@ -77,17 +81,30 @@ async function getFeedPosts(): Promise<FeedPostProps[]> {
       return [];
     }
   } else if (userData.role === "parent") {
-    const { data: parentChildren } = await supabase
+    const { data: parentChildren, error: childrenError } = await supabase
       .from("parent_children")
       .select("child_id")
       .eq("parent_id", user.id);
 
+    if (childrenError) {
+      console.error("Error fetching parent children:", childrenError);
+    }
+
     const childIds = parentChildren?.map((pc) => pc.child_id) || [];
     
     if (childIds.length > 0) {
-      query = query.or(
-        `post_children.child_id.in.(${childIds.join(",")}),type.eq.announcement`
-      );
+      const { data: postsWithChildren } = await supabase
+        .from("post_children")
+        .select("post_id")
+        .in("child_id", childIds);
+      
+      const postIds = postsWithChildren?.map((pc) => pc.post_id) || [];
+      
+      if (postIds.length > 0) {
+        query = query.or(`id.in.(${postIds.join(",")}),type.eq.announcement`);
+      } else {
+        query = query.eq("type", "announcement");
+      }
     } else {
       query = query.eq("type", "announcement");
     }

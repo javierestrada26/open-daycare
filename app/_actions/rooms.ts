@@ -51,6 +51,7 @@ export async function getRoomChildren(roomId: string): Promise<{ children: Array
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
+    console.error("getRoomChildren: No user");
     return { children: [] };
   }
 
@@ -61,28 +62,36 @@ export async function getRoomChildren(roomId: string): Promise<{ children: Array
     .single();
 
   if (!userData || userData.role !== "staff") {
+    console.error("getRoomChildren: User is not staff", userData);
     return { children: [] };
   }
 
-  const { data: staffRoom } = await supabase
+  const { data: staffRoom, error: staffRoomError } = await supabase
     .from("staff_rooms")
     .select("room_id")
     .eq("staff_id", user.id)
     .eq("room_id", roomId)
     .single();
 
-  if (!staffRoom) {
+  if (staffRoomError || !staffRoom) {
+    console.error("getRoomChildren: Staff room not found", staffRoomError);
     return { children: [] };
   }
 
-  const { data: children, error } = await supabase
+  const { data: children, error: childrenError } = await supabase
     .from("children")
     .select("id, full_name, avatar_url")
     .eq("room_id", roomId)
     .eq("status", "active")
     .order("full_name");
 
-  if (error || !children) {
+  if (childrenError) {
+    console.error("getRoomChildren: Error fetching children", childrenError);
+    return { children: [] };
+  }
+
+  if (!children) {
+    console.error("getRoomChildren: No children returned");
     return { children: [] };
   }
 
