@@ -157,8 +157,11 @@ export async function uploadPostPhoto(formData: FormData): Promise<{ success?: b
 
   const file = formData.get("file") as File;
   if (!file) {
+    console.error("uploadPostPhoto: No file in formData");
     return { success: false, error: "No se proporcionó archivo" };
   }
+
+  console.log("uploadPostPhoto: File received", { name: file.name, type: file.type, size: file.size });
 
   if (file.size > MAX_FILE_SIZE) {
     return { success: false, error: "La imagen no debe superar 5MB" };
@@ -175,6 +178,8 @@ export async function uploadPostPhoto(formData: FormData): Promise<{ success?: b
     const fileName = `${crypto.randomUUID()}.webp`;
     const storagePath = `${user.id}/temp/${fileName}`;
 
+    console.log("uploadPostPhoto: Uploading to storage", { storagePath, contentType: file.type });
+
     const { error: uploadError } = await supabase.storage
       .from("post-photos")
       .upload(storagePath, buffer, {
@@ -188,6 +193,8 @@ export async function uploadPostPhoto(formData: FormData): Promise<{ success?: b
     }
 
     const { data: urlData } = supabase.storage.from("post-photos").getPublicUrl(storagePath);
+
+    console.log("uploadPostPhoto: Upload successful", { path: storagePath });
 
     return { success: true, url: urlData.publicUrl, path: storagePath };
   } catch (err) {
