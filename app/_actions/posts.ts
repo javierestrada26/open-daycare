@@ -3,7 +3,6 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
-import imageCompression from "browser-image-compression";
 
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -165,16 +164,7 @@ export async function uploadPostPhoto(file: File): Promise<{ success?: boolean; 
   }
 
   try {
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-      fileType: "image/webp",
-    };
-
-    const compressedFile = await imageCompression(file, options);
-
-    const arrayBuffer = await compressedFile.arrayBuffer();
+    const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
     const fileName = `${crypto.randomUUID()}.webp`;
@@ -183,7 +173,7 @@ export async function uploadPostPhoto(file: File): Promise<{ success?: boolean; 
     const { error: uploadError } = await supabase.storage
       .from("post-photos")
       .upload(storagePath, buffer, {
-        contentType: "image/webp",
+        contentType: file.type,
         upsert: false,
       });
 
