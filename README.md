@@ -179,6 +179,47 @@ Detener con `npx supabase stop` (los datos persisten hasta un `db reset`).
 - El RLS protege todos los datos: el cliente solo ve lo que el usuario autenticado puede ver.
 - Para verificar Auth en servidor usa `supabase.auth.getUser()`.
 
+## Features implementadas
+
+### Autenticación y rutas
+
+- **Login** (`/login`) con autenticación real email+password vía Supabase Auth.
+- **Activar cuenta** (`/activate-account`) para activación de cuentas.
+- **Protección de rutas** en middleware: redirige usuarios sin sesión a `/login` y usuarios autenticados fuera de las pantallas de auth.
+- **Roles**: interfaces separadas para staff (`/staff/*`) y familia (`/family/*`) con routing basado en rol.
+
+### Feed y publicaciones
+
+- **Feed** (`/`) con sidebar fijo y main con publicaciones.
+- **Crear publicación** (modal) con selección de destinatarios (niños individuales o toda la sala), tipo de publicación (Comida, Siesta, Actividad, Logro, Ánimo, Foto, Anuncio), descripción y fotos.
+- **Subida de fotos** a Supabase Storage con conversión automática a webp (`browser-image-compression`), preview inmediato con URLs firmadas, y limpieza de fotos huérfanas.
+- **Galería de fotos** en publicaciones con soporte multi-foto (máx. 5).
+
+### Gestión de niños
+
+- **Lista de niños** (`/staff/kids`) agrupada por salas con buscador funcional.
+- **Perfil de niño** (`/staff/kids/[slug]`) con datos reales desde Supabase.
+- **Agregar niño** (modal) con campos: nombre completo, fecha de nacimiento (selector día/mes/año), sala, alergias (tags) y notas médicas.
+- **Vincular padre** (modal) con selección de parentesco (Madre/Padre/Tutor), email y código de invitación.
+
+### Base de datos (Supabase)
+
+- **Tablas**: `daycares`, `users`, `rooms`, `children`, `posts`, `post_children`, `post_photos`, `reactions`, `comments`, `daily_summaries`, `devices`, `invitations`, `parent_children`, `staff_rooms`, `user_preferences`.
+- **RLS policies** para protección de datos entre staff y familias.
+- **Storage bucket** `post-photos` para fotos de publicaciones.
+- **Preferencias de usuario**: última sala usada por staff.
+- **Limpieza automática**: función programada para eliminar fotos huérfanas del storage.
+
+### Componentes UI
+
+- `FeedPost` - Publicación con galería de fotos y badges de tipo.
+- `KidCard` - Tarjeta de niño con avatar, edad y alergias.
+- `BirthDatePicker` - Selector de fecha de nacimiento con día/mes/año.
+- `AllergyBox` - Visualización de alergias.
+- `LinkedParent` - Padre vinculado con estado (activo/pendiente).
+- `SunMark` - Icono de sol para pantallas de auth.
+- `InfoRow` - Fila de información para perfiles.
+
 ## Recursos
 
 - [Next.js Docs](https://nextjs.org/docs)

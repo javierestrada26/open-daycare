@@ -1,2 +1,2 @@
--- Add missing index on invitations.invited_by (performance advisory)
-create index invitations_invited_by_idx on public.invitations (invited_by);
+-- Index moved to 20260826145026_create_invitations_parent_children_tables.sql
+-- to fix migration ordering dependency.
