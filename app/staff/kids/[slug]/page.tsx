@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { Sidebar } from "../../_components/Sidebar";
-import { AllergyBox } from "../../_components/AllergyBox";
-import { InfoRow } from "../../_components/InfoRow";
+import { StaffSidebar } from "../../_components/StaffSidebar";
+import { AllergyBox } from "@/app/_components/AllergyBox";
+import { InfoRow } from "@/app/_components/InfoRow";
 import { LinkParentModal } from "../../_components/LinkParentModal";
 import { createClient } from "@/utils/supabase/server";
 import {
@@ -14,7 +14,7 @@ import {
   formatEnrollShort,
   slugify,
   type RoomVm,
-} from "../../_lib/kids";
+} from "@/app/_lib/kids";
 
 type ChildRow = {
   id: string;
@@ -32,7 +32,7 @@ type RoomRow = {
   created_at: string;
 };
 
-export default async function KidProfilePage({
+export default async function StaffKidProfilePage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -94,12 +94,12 @@ export default async function KidProfilePage({
 
   return (
     <div className="flex min-h-screen bg-app-bg">
-      <Sidebar active="ninos" />
+      <StaffSidebar active="ninos" />
 
       <main className="flex-1 min-w-0 h-screen overflow-y-auto">
         <div className="max-w-[820px] w-full mx-auto px-10 pt-[34px] pb-20">
           <Link
-            href="/kids"
+            href="/staff/kids"
             className="flex items-center gap-[7px] text-ink-muted font-bold text-sm mb-5"
           >
             <svg

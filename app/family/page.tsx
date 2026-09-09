@@ -1,0 +1,215 @@
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
+import { FamilySidebar } from "./_components/FamilySidebar";
+import { FeedPost, type FeedPostProps, type BadgeKind } from "@/app/_components/FeedPost";
+
+type PostType = "meal" | "nap" | "activity" | "achievement" | "mood" | "photo" | "announcement";
+
+const BADGE_MAP: Record<PostType, { kind: BadgeKind; label: string }> = {
+  meal: { kind: "comida", label: "COMIDA" },
+  nap: { kind: "siesta", label: "SIESTA" },
+  activity: { kind: "actividad", label: "ACTIVIDAD" },
+  achievement: { kind: "logro", label: "LOGRO" },
+  mood: { kind: "animo", label: "ÁNIMO" },
+  photo: { kind: "foto", label: "FOTO" },
+  announcement: { kind: "anuncio", label: "ANUNCIO" },
+};
+
+async function getFamilyFeedPosts(): Promise<FeedPostProps[]> {
+  const supabase = createClient(await cookies());
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return [];
+  }
+
+  const { data: userData } = await supabase
+    .from("users")
+    .select("role, full_name")
+    .eq("id", user.id)
+    .single();
+
+  if (!userData) {
+    return [];
+  }
+
+  let query = supabase
+    .from("posts")
+    .select(`
+      id,
+      type,
+      body,
+      published_at,
+      author:users!posts_author_id_fkey (
+        id,
+        full_name,
+        avatar_url
+      ),
+      room:rooms!posts_room_id_fkey (
+        id,
+        name
+      ),
+      post_children (
+        child:children!post_children_child_id_fkey (
+          id,
+          full_name
+        )
+      ),
+      post_photos (
+        id,
+        url,
+        position
+      )
+    `)
+    .order("published_at", { ascending: false });
+
+  if (userData.role === "parent") {
+    const { data: parentChildren, error: childrenError } = await supabase
+      .from("parent_children")
+      .select("child_id")
+      .eq("parent_id", user.id);
+
+    if (childrenError) {
+      console.error("Error fetching parent children:", childrenError);
+    }
+
+    const childIds = parentChildren?.map((pc) => pc.child_id) || [];
+    
+    if (childIds.length > 0) {
+      const { data: postsWithChildren } = await supabase
+        .from("post_children")
+        .select("post_id")
+        .in("child_id", childIds);
+      
+      const postIds = postsWithChildren?.map((pc) => pc.post_id) || [];
+      
+      if (postIds.length > 0) {
+        query = query.or(`id.in.(${postIds.join(",")}),type.eq.announcement`);
+      } else {
+        query = query.eq("type", "announcement");
+      }
+    } else {
+      query = query.eq("type", "announcement");
+    }
+  }
+
+  const { data: posts, error } = await query;
+
+  if (error || !posts) {
+    console.error("Error fetching posts:", error);
+    return [];
+  }
+
+  const feedPosts: FeedPostProps[] = [];
+
+  for (const post of posts) {
+    const author = post.author as unknown as { id: string; full_name: string; avatar_url: string | null } | null;
+    const postChildren = post.post_children as unknown as Array<{ child: { id: string; full_name: string } }>;
+    const postPhotos = post.post_photos as unknown as Array<{ id: string; url: string; position: number }>;
+
+    const authorName = author?.full_name || "Staff";
+    const authorInitial = authorName.charAt(0).toUpperCase();
+    
+    const publishedDate = new Date(post.published_at);
+    const timeStr = publishedDate.toLocaleTimeString("es-AR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    let audience = "toda la sala";
+    if (postChildren && postChildren.length > 0) {
+      if (postChildren.length === 1) {
+        audience = `familia de ${postChildren[0].child.full_name}`;
+      } else if (postChildren.length <= 3) {
+        const names = postChildren.map((pc) => pc.child.full_name).join(", ");
+        audience = `familias de ${names}`;
+      } else {
+        audience = `${postChildren.length} familias`;
+      }
+    }
+
+    let photos: FeedPostProps["photos"] | undefined;
+    if (postPhotos && postPhotos.length > 0) {
+      const sortedPhotos = [...postPhotos].sort((a, b) => a.position - b.position);
+      const photoUrls: Array<{ url: string; alt: string }> = [];
+      
+      for (const photo of sortedPhotos) {
+        const { data: signedUrlData } = await supabase.storage
+          .from("post-photos")
+          .createSignedUrl(photo.url, 3600);
+        
+        if (signedUrlData?.signedUrl) {
+          photoUrls.push({
+            url: signedUrlData.signedUrl,
+            alt: `Foto de ${authorName}`,
+          });
+        }
+      }
+      
+      if (photoUrls.length > 0) {
+        photos = photoUrls;
+      }
+    }
+
+    feedPosts.push({
+      avatar: {
+        letter: authorInitial,
+        bg: "#A9D9E8",
+        color: "#1F7A93",
+      },
+      name: authorName,
+      time: timeStr,
+      badge: BADGE_MAP[post.type as PostType],
+      audience,
+      text: post.body,
+      photos: photos,
+      postId: post.id,
+      likes: 0,
+      comments: 0,
+    });
+  }
+
+  return feedPosts;
+}
+
+export default async function FamilyFeedPage() {
+  const posts = await getFamilyFeedPosts();
+  return (
+    <div className="flex min-h-screen bg-app-bg">
+      <FamilySidebar active="feed" />
+
+      <main className="flex-1 min-w-0 h-screen overflow-y-auto">
+        <div className="max-w-[760px] w-full mx-auto px-10 pt-[34px] pb-20">
+          <div className="mb-6">
+            <div className="text-[12.5px] font-extrabold tracking-[0.8px] text-primary mb-1">
+              GUARDERÍA · SALA SOLES
+            </div>
+            <h1 className="font-display font-semibold text-[30px] m-0 text-ink">
+              Buenas, Familia
+            </h1>
+            <p className="m-[5px_0_0] text-ink-muted text-[14.5px]">
+              martes 17 jun
+            </p>
+          </div>
+
+          <div className="flex items-center gap-[14px] mb-[14px]">
+            <span
+              className="text-[12.5px] font-extrabold tracking-[0.8px]"
+              style={{ color: "#8A7C6D" }}
+            >
+              PUBLICADO HOY
+            </span>
+            <span className="flex-1 h-px bg-rule" />
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {posts.map((post, i) => (
+              <FeedPost key={i} {...post} />
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

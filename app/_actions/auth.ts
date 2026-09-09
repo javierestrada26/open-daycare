@@ -11,13 +11,29 @@ export async function signIn(formData: FormData): Promise<{ error?: string } | v
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
     return { error: "Email o contraseña incorrectos" };
+  }
+
+  if (data.user) {
+    const { data: userData } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", data.user.id)
+      .single();
+
+    if (userData?.role === "parent") {
+      redirect("/family");
+    }
+
+    if (userData?.role === "staff" || userData?.role === "admin") {
+      redirect("/staff");
+    }
   }
 
   redirect("/");

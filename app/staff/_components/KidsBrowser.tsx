@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { KidCard } from "./KidCard";
-import type { KidCardVm, RoomVm } from "../_lib/kids";
+import { KidCard } from "@/app/_components/KidCard";
+import type { KidCardVm, RoomVm } from "@/app/_lib/kids";
 
 type KidsBrowserProps = {
   rooms: RoomVm[];

@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createPost, uploadPostPhoto, deleteOrphanedPhotos } from "../_actions/posts";
-import { getStaffRooms, getRoomChildren, getUserPreferences } from "../_actions/rooms";
+import { createPost, uploadPostPhoto, deleteOrphanedPhotos } from "@/app/_actions/posts";
+import { getStaffRooms, getRoomChildren, getUserPreferences } from "@/app/_actions/rooms";
 import imageCompression from "browser-image-compression";
 
 type Room = { id: string; name: string };

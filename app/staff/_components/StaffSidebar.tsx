@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 
 import { NewPostModal } from "./NewPostModal";
 import { signOut } from "@/app/_actions/auth";
@@ -30,11 +32,30 @@ function NavItem({ label, href, active, icon }: NavItemProps) {
   );
 }
 
-type SidebarProps = {
+type StaffSidebarProps = {
   active?: SidebarActive;
 };
 
-export function Sidebar({ active = "feed" }: SidebarProps) {
+export async function StaffSidebar({ active = "feed" }: StaffSidebarProps) {
+  const supabase = createClient(await cookies());
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  let userName = "Usuario";
+  let userInitial = "U";
+  
+  if (user) {
+    const { data: userData } = await supabase
+      .from("users")
+      .select("full_name")
+      .eq("id", user.id)
+      .single();
+    
+    if (userData?.full_name) {
+      userName = userData.full_name;
+      userInitial = userData.full_name.charAt(0).toUpperCase();
+    }
+  }
+
   return (
     <aside className="w-[248px] shrink-0 bg-surface border-r border-border-cream flex flex-col sticky top-0 h-screen py-6 px-4">
       <a className="flex items-center gap-[11px] pt-1 pr-2 pb-[22px] pl-2">
@@ -67,7 +88,7 @@ export function Sidebar({ active = "feed" }: SidebarProps) {
 
       <nav className="flex flex-col gap-1 flex-1">
         <NavItem
-          href="/"
+          href="/staff"
           active={active === "feed"}
           label="Feed"
           icon={
@@ -86,7 +107,7 @@ export function Sidebar({ active = "feed" }: SidebarProps) {
           }
         />
         <NavItem
-          href="/kids"
+          href="/staff/kids"
           active={active === "ninos"}
           label="Niños"
           icon={
@@ -150,14 +171,14 @@ export function Sidebar({ active = "feed" }: SidebarProps) {
       <div className="border-t border-border-cream pt-[14px] mt-2.5">
         <div className="flex items-center gap-[11px] px-2 py-1.5">
           <span className="w-[38px] h-[38px] rounded-full bg-primary-soft text-white font-display font-semibold text-base flex items-center justify-center shrink-0">
-            C
+            {userInitial}
           </span>
           <span className="flex-1 min-w-0">
             <span className="block font-extrabold text-sm text-ink">
-              Caro Giménez
+              {userName}
             </span>
             <span className="block text-xs text-ink-faint">
-              Maestra · Soles
+              Staff
             </span>
           </span>
           <form action={signOut} className="shrink-0">

@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { Sidebar } from "../_components/Sidebar";
+import { StaffSidebar } from "../_components/StaffSidebar";
 import { AddKidModal } from "../_components/AddKidModal";
 import { KidsBrowser } from "../_components/KidsBrowser";
 import { createClient } from "@/utils/supabase/server";
@@ -10,7 +10,7 @@ import {
   slugify,
   type KidCardVm,
   type RoomVm,
-} from "../_lib/kids";
+} from "@/app/_lib/kids";
 
 type ChildRow = {
   id: string;
@@ -27,7 +27,7 @@ type RoomRow = {
   created_at: string;
 };
 
-export default async function KidsPage() {
+export default async function StaffKidsPage() {
   const supabase = createClient(await cookies());
 
   const [{ data: rooms }, { data: children }] = await Promise.all([
@@ -68,7 +68,7 @@ export default async function KidsPage() {
 
   return (
     <div className="flex min-h-screen bg-app-bg">
-      <Sidebar active="ninos" />
+      <StaffSidebar active="ninos" />
 
       <main className="flex-1 min-w-0 h-screen overflow-y-auto">
         <div className="max-w-[880px] w-full mx-auto px-10 pt-[34px] pb-20">

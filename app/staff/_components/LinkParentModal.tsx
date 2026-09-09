@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { sendInvitation } from "../_actions/invitations";
-import type { RelationUi } from "../_lib/invitations";
+import { sendInvitation } from "@/app/_actions/invitations";
+import type { RelationUi } from "@/app/_lib/invitations";
 
 type FormState = {
   name: string;

@@ -2,7 +2,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
-export default async function HomePage() {
+export default async function FamilyLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const supabase = createClient(await cookies());
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -20,13 +24,17 @@ export default async function HomePage() {
     redirect("/login");
   }
 
-  if (userData.role === "parent") {
-    redirect("/family");
-  }
-
   if (userData.role === "staff" || userData.role === "admin") {
     redirect("/staff");
   }
 
-  redirect("/login");
+  if (userData.role !== "parent") {
+    redirect("/staff");
+  }
+
+  return (
+    <>
+      {children}
+    </>
+  );
 }

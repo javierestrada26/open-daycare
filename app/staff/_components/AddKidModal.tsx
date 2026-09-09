@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { RoomVm } from "../_lib/kids";
-import { BirthDatePicker, type BirthDateValue } from "./BirthDatePicker";
+import type { RoomVm } from "@/app/_lib/kids";
+import { BirthDatePicker, type BirthDateValue } from "@/app/_components/BirthDatePicker";
 import { createKid } from "@/app/_actions/kids";
 
 type FormState = {
